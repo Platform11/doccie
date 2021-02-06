@@ -1,0 +1,10 @@
+input[type="file"] {
+    position: absolute;
+    top: -500px;
+}
+
+span.remove-file {
+    color: red;
+    cursor: pointer;
+    float: right;
+}

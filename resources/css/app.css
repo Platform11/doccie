@@ -1,0 +1,43 @@
+@import "jam";
+@import "globals";
+@import "components/buttons";
+@import "components/forms";
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+    @font-face {
+        font-family: "Inter var";
+        font-weight: 100 900;
+        font-display: swap;
+        font-style: normal;
+        font-named-instance: "Regular";
+        src: url("../fonts/Inter-roman.var.woff2") format("woff2");
+    }
+
+    @font-face {
+        font-family: "Inter var";
+        font-weight: 100 900;
+        font-display: swap;
+        font-style: italic;
+        font-named-instance: "Italic";
+        src: url("../fonts/Inter-italic.var.woff2") format("woff2");
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply font-sans font-bold;
+    }
+
+    h1 {
+        @apply text-2xl;
+
+        @screen sm {
+            @apply text-4xl;
+        }
+    }
+}

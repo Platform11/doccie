@@ -1,0 +1,22 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+
+    paths:
+        - app
+
+    # The level 8 is the highest level
+    level: 5
+
+    ignoreErrors:
+        - '#Call to an undefined static method hisorange\\BrowserDetect\\Facade::browserName\(\).#'
+        - '#Call to an undefined static method hisorange\\BrowserDetect\\Facade::platformName\(\).#'
+        - '#Call to an undefined method Illuminate\\Support\\HigherOrderCollectionProxy::setAppends\(\).#'
+        - '#Property App\\Models\\InspectionEntry::\$relations_to_cascade has no typehint specified.#'
+        - '#Property App\\Models\\Location::\$relations_to_cascade has no typehint specified.#'
+        - '#Method App\\Exceptions\\Handler::returnErrorForProduction\(\) has no return typehint specified.#'
+        - '#Method App\\Exceptions\\Handler::returnErrorForAuthenticatedUsers\(\) has no return typehint specified.#'
+        - '#Call to an undefined method Illuminate\\Contracts\\Pagination\\LengthAwarePaginator::load\(\)#'
+
+    checkMissingIterableValueType: false

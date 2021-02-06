@@ -1,0 +1,85 @@
+.btn {
+    @apply px-3 py-3 text-sm font-medium leading-none tracking-wide rounded-md;
+}
+
+.btn-sm {
+    @apply px-3 py-2 tracking-wide;
+}
+
+.btn-spinner,
+.btn-spinner:after {
+    border-radius: 50%;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.btn-spinner {
+    font-size: 10px;
+    position: absolute;
+    left: 50%;
+    margin-left: -8px;
+    text-indent: -9999em;
+    border-top: 0.2em solid #ffffff;
+    border-right: 0.2em solid#ffffff;
+    border-bottom: 0.2em solid #ffffff;
+    border-left: 0.2em solid transparent;
+    transform: translateZ(0);
+    animation: spinning 0.5s infinite linear;
+}
+
+@keyframes spinning {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.btn-primary {
+    @apply text-white shadow-sm cursor-pointer bg-primary;
+
+    transition: background linear 100ms;
+}
+
+.btn-primary:hover {
+    @apply text-white bg-primary;
+}
+
+.btn-primary.btn-submitting:hover {
+    @apply text-white cursor-default bg-primary;
+}
+
+.btn-secondary {
+    @apply bg-white border border-gray-200 shadow-sm cursor-pointer text-primary;
+
+    transition: background linear 100ms;
+}
+
+.btn-secondary:hover {
+    @apply text-primary-light;
+}
+
+.btn-delete {
+    @apply text-red-500 bg-white border border-gray-200 shadow-sm cursor-pointer;
+
+    transition: background linear 100ms;
+}
+
+.btn-delete:hover {
+    @apply text-red-400;
+}
+
+.btn-primary:hover > .btn-spinner {
+    border-top: 0.2em solid #ffffff;
+    border-right: 0.2em solid#ffffff;
+    border-bottom: 0.2em solid #ffffff;
+    border-left: 0.2em solid transparent;
+}
+
+.btn-primary.btn-submitting:hover > .btn-spinner {
+    border-top: 0.2em solid #ffffff;
+    border-right: 0.2em solid#ffffff;
+    border-bottom: 0.2em solid #ffffff;
+    border-left: 0.2em solid transparent;
+}
