@@ -3,13 +3,9 @@
 
     <style type="text/css">
 
-        @font-face {
-            font-family: "Inter var";
-            font-weight: 100 900;
-            font-display: swap;
-            font-style: normal;
-            font-named-instance: "Regular";
-            src: url(data:application/font-woff2;charset=utf-8;base64,{{base64_encode(file_get_contents(public_path('fonts/Inter-roman.var.woff2')))}}) format("woff2");
+        @import url(https://fonts.googleapis.com/css?family=Inter);
+        body {
+          font-family: 'Inter', sans-serif;
         }
 
         html {
@@ -19,7 +15,7 @@
         
     </style>
    
-    <body style="width: 100%; margin:0; font-family: 'Inter var';">
+    <body style="width: 100%; margin:0; font-family:'Inter';">
         <header style="margin-bottom: 24px;">
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
