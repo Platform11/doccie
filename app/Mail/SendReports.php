@@ -66,17 +66,18 @@ class SendReports extends Mailable
      */
     public function build()
     {   
+
         $mail =  $this->markdown('vendor.notifications.email')
             ->replyTo($this->user->email, $this->user->first_name. ' '. $this->user->last_name)
             // ->from('test@test.com')
             ->subject('Overzicht vraagposten')->with([
                 'level' => 'primary',
-            'logo' => asset('logo-oneaccountants.svg'),
+                'logo' => $this->user->account->logo,
                 'alt' => $this->user->account->name,
                 'color' => '77BC1F',
                 'greeting' => 'Beste '.$this->administration->contact_first_name .' '. $this->administration->contact_last_name.',',
-                'introLines' => ["Hierbij verzoek ik u om voor de ". $this->transaction_count. ' vraagposten de bijbehorende documenten naar mij te mailen of te uploaden naar Basecone. Het overzicht van de openstaande vraagposten is als bijlage toegevoegd aan deze mail.'],
-                'outroLines' => ["Graag ontvang ik de documenten zo spoedig mogelijk. Alvast bedankt voor uw medewerking."],
+                'introLines' => ["Hierbij verzoek ik u om de missende documenten voor de vraagposten te uploaden in Basecone. Het overzicht van de openstaande vraagposten is als bijlage toegevoegd aan deze mail."],
+                'outroLines' => ["Met vriendelijke groet"],
                 'salutation' => $this->user->first_name .' '. $this->user->last_name,
             ]);
 
@@ -87,15 +88,17 @@ class SendReports extends Mailable
         $report = $this->report;
         $author = $this->user;
         $administration = $this->administration;
+        $files = $this->files;
 
         $mail = $mail->withSwiftMessage(
-            function ($message) use($to, $cc, $bcc, $report, $author, $administration){
+            function ($message) use($to, $cc, $bcc, $report, $author, $administration, $files){
                 $message->to = $to;
                 $message->cc = $cc;
                 $message->bcc = $bcc;
                 $message->author = $author;
                 $message->report = $report;
                 $message->administration = $administration;
+                $message->files = $files;
                 $headers = $message->getHeaders();
                 $headers->addTextHeader('X-PM-Metadata-model', 'Report');
                 $headers->addTextHeader('X-PM-Metadata-model_id', $report->id);

@@ -26,18 +26,59 @@
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <text-input
-                                        v-model="form.logo"
-                                        :error="errors.logo"
-                                        label="Logo"
-                                    ></text-input>
-                                </div>
-
-                                <div class="col-span-6 sm:col-span-6">
-                                    <text-input
                                         v-model="form.twinfield_office_code"
                                         :error="errors.twinfield_office_code"
                                         label="Twinfield office code"
                                     ></text-input>
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-6">
+                                    <div class="mb-2 font-semibold">Logo</div>
+
+                                    <img
+                                        v-if="account.logo != ''"
+                                        style="height:32px;"
+                                        :src="account.logo"
+                                    />
+                                    <div @click="editLogo = true">
+                                        edit logo
+                                    </div>
+                                    <media-library-attachment
+                                        ref="mediaComponent"
+                                        v-if="editLogo || account.logo == ''"
+                                        name="logo"
+                                        class="w-full"
+                                        :validation-rules="{
+                                            accept: ['image/png', 'image/jpeg'],
+                                            maxSizeInKB: 5000
+                                        }"
+                                        :validation-errors="errors.logo"
+                                        @change="onChange"
+                                        :translations="{
+                                            fileTypeNotAllowed:
+                                                'You must upload a file of type',
+                                            tooLarge: 'File too large, max',
+                                            tooSmall: 'File too small, min',
+                                            tryAgain:
+                                                'please try uploading this file again',
+                                            somethingWentWrong:
+                                                'Something went wrong while uploading this file',
+                                            selectOrDrag:
+                                                'Select or drag files',
+                                            selectOrDragMax:
+                                                'Selecteer een afbeelding of bestand {maxItems} {file}',
+                                            file: {
+                                                singular: 'bestand',
+                                                plural: 'bestanden'
+                                            },
+                                            anyImage: 'any image',
+                                            anyVideo: 'any video',
+                                            goBack: 'Go back',
+                                            dropFile: 'Drop file to upload',
+                                            dragHere: 'Drag file here',
+                                            remove: 'Verwijder'
+                                        }"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -56,11 +97,13 @@
 <script>
 import TextInput from "@/Elements/TextInput";
 import LoadingButton from "@/Elements/LoadingButton.vue";
+import { MediaLibraryAttachment } from "media-library-pro-vue2-attachment";
 
 export default {
     components: {
         TextInput,
-        LoadingButton
+        LoadingButton,
+        MediaLibraryAttachment
     },
 
     props: {
@@ -70,10 +113,11 @@ export default {
 
     data() {
         return {
+            editLogo: false,
             form: {
-                id: this.account.id,
+                account_id: this.account.id,
                 name: this.account.name,
-                logo: this.account.logo,
+                logo: "",
                 twinfield_office_code: this.account.twinfield_office_code
             },
             submitting: false
@@ -83,12 +127,22 @@ export default {
     created() {},
 
     methods: {
+        onChange(logo) {
+            this.form.logo = logo;
+        },
         submit() {
             this.submitting = true;
             this.$inertia.post(this.route("settings.update.info"), this.form, {
                 preserveScroll: true,
                 onFinish: () => {
                     this.submitting = false;
+                    this.logo = "";
+                    this.editLogo = false;
+                    this.$refs.mediaComponent.mediaLibrary.changeState(
+                        state => {
+                            state.media = [];
+                        }
+                    );
                 }
             });
         }

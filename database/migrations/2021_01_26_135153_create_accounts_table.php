@@ -16,7 +16,6 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('logo')->nullable();
             $table->string('twinfield_office_code')->nullable();
             $table->unsignedBigInteger('admin_id')->nullable();
             $table->softDeletes();

@@ -249,7 +249,7 @@ class GenerateReports implements ShouldQueue
               'name' => $this->authenticated_user->first_name. ' '. $this->authenticated_user->last_name, 
               'email' => $this->authenticated_user->email
             ],
-          'logo_path' => asset('logo-oneaccountants.svg'),
+          'logo' => $this->authenticated_user->account->logo,
           'account' => ['color'=>'#77BC1F']
         ];
     }

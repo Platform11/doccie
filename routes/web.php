@@ -21,6 +21,8 @@ use App\Http\Controllers\SettingsController;
 |
 */
 
+Route::mediaLibrary();
+
 Route::group(['prefix' => '', 'middleware'=> ['auth']], function() {
   Route::get('')->name('dashboard')->uses(AdministrationController::class);
 });

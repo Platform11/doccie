@@ -14,7 +14,7 @@ class AccountSeeder extends Seeder
      */
     public function run()
     {   
-        Account::create(['name' => 'One Accountants & Bedrijsadviseurs', 'logo' => 'oneaccountants-logo.svg', 'twinfield_office_code' => 'one']);
-        Account::create(['name' => 'Syfers Administratie & Advies Bleiswijk B.V.', 'logo' => 'syfers-logo.svg', 'twinfield_office_code' => 'syfers-advies']);
+        Account::create(['name' => 'One Accountants & Bedrijsadviseurs', 'twinfield_office_code' => 'one']);
+        Account::create(['name' => 'Syfers Administratie & Advies Bleiswijk B.V.', 'twinfield_office_code' => 'syfers-advies']);
     }
 }

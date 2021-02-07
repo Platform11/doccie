@@ -5,6 +5,7 @@ namespace App\Listeners;
 use Illuminate\Mail\Events\MessageSent;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class LogSentMessage
 {
@@ -57,6 +58,7 @@ class LogSentMessage
 
             $event->message->administration->status = "sent";
             $event->message->administration->save();
+            $this->deleteFiles($event->message->files);
         }
     }
 
@@ -68,5 +70,14 @@ class LogSentMessage
         $notification->channel = 'mail';
         $notification->recipient = $recipient;
         $notification->save();
+    }
+
+    private function deleteFiles($files)
+    {
+        foreach($files as $file)
+        {
+            $parts = explode('/', $file);
+            \Storage::deleteDirectory($parts[0]);
+        }
     }
 }

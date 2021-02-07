@@ -17,17 +17,17 @@ mix.js("resources/js/app.js", "public/js")
         require("postcss-import"),
         require("tailwindcss"),
         require("postcss-nested"), // or require('postcss-nesting')
-        require("autoprefixer"),
+        require("autoprefixer")
     ])
     .vue({ version: 2 })
     .webpackConfig({
         devServer: {
-            https: true,
+            https: true
         },
         output: {
             chunkFilename: "js/[name].js?id=[chunkhash]",
-            publicPath: mix.inProduction() ? "/" : "https://localhost:8080/",
-        },
+            publicPath: mix.inProduction() ? "/" : "https://localhost:8080/"
+        }
     })
     .copyDirectory("resources/images/**", "public/images")
     .copyDirectory("resources/fonts/**", "public/fonts")
@@ -36,11 +36,18 @@ mix.js("resources/js/app.js", "public/js")
 mix.browserSync({
     proxy: "https://doccie.test",
     https: true,
-    files: ["resources/lang/**/*.php", "resources/views/**/*.php"],
+    files: ["resources/lang/**/*.php", "resources/views/**/*.php"]
+});
+
+mix.override(webpackConfig => {
+    webpackConfig.resolve.modules = [
+        "node_modules",
+        __dirname + "/vendor/spatie/laravel-medialibrary-pro/resources/js"
+    ];
 });
 
 mix.alias({
-    "@": path.resolve("resources/js"),
+    "@": path.resolve("resources/js")
 });
 
 if (mix.inProduction()) {

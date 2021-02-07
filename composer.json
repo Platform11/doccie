@@ -7,6 +7,12 @@
         "laravel"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://satis.spatie.be"
+        }
+    ],
     "require": {
         "php": "^7.3",
         "facade/ignition": "^2.5",
@@ -26,7 +32,7 @@
         "sammyjo20/lasso": "^1.2",
         "spatie/browsershot": "^3.42",
         "spatie/laravel-activitylog": "^3.16",
-        "spatie/laravel-medialibrary": "^8.10",
+        "spatie/laravel-medialibrary-pro": "^1.12",
         "spatie/laravel-permission": "^3.17",
         "tightenco/ziggy": "^0.9.4",
         "verumconsilium/laravel-browsershot": "^1.3"

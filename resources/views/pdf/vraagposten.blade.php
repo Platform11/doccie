@@ -14,14 +14,14 @@
    
     <body style="width: 100%; margin:0;">
         <header style="margin-bottom: 12px;">
-           <img src="{{ $logo_path }}" class="logo" width="300">
+           <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
         <main>
             <h1 class="text-2xl">{{ $doc_type }} {{ $administration_name }}</h1>
             Datum: {{$date}}
 
             <div class="mt-4">
-                <p>Graag verzoeken wij u de bijbehorende documenten van de onderstaande vraagposten aan te leveren per email of te uploaden naar Basecone.</p>
+                <p>Graag verzoek ik u om de missende documenten voor de vraagposten te uploaden in Basecone.</p>
             </div>
 
             <div style="margin-top: 12px;">

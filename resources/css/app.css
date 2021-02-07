@@ -2,6 +2,7 @@
 @import "globals";
 @import "components/buttons";
 @import "components/forms";
+@import "../../vendor/spatie/laravel-medialibrary-pro/resources/js/media-library-pro-styles/src/styles.css";
 
 @import "tailwindcss/base";
 @import "tailwindcss/components";
