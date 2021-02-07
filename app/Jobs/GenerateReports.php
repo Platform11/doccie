@@ -95,8 +95,8 @@ class GenerateReports implements ShouldQueue
         $path_to_store = storage_path() . '/app/' . $folder_name . '/'. $file_name;
 
         Browsershot::html(view('pdf.vraagposten', $data_vraagposten)->render())
-        ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
         ->waitUntilNetworkIdle()
+        ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
         ->addChromiumArguments([
             'font-render-hinting' => 'none',
         ])
@@ -104,7 +104,6 @@ class GenerateReports implements ShouldQueue
         // ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('/css/app.css'))]))
         ->margins(20, 20, 20, 20)
         ->landscape(true)
-        ->waitUntilNetworkIdle()
         ->save($path_to_store);
 
         // PDF::loadView('pdf.vraagposten', $data_vraagposten)
