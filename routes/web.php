@@ -70,6 +70,6 @@ Route::group(['prefix' => 'twinfield'], function() {
   Route::get('validate-credentials')->name('twinfield.validate-credentials')->uses([TwinfieldController::class, 'validateCredentials']);
 });
 
-Route::group(['prefix' => 'pdf'], function() {
-  Route::get('vraagposten')->name('pdf.vraagposten')->uses([PdfController::class, 'vraagposten']);
-});
+// Route::group(['prefix' => 'pdf'], function() {
+//   Route::get('vraagposten')->name('pdf.vraagposten')->uses([PdfController::class, 'vraagposten']);
+// });
