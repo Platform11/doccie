@@ -12,8 +12,8 @@
          
     </style>
    
-    <body style="width: 100%; margin:0;">
-        <header style="margin-bottom: 16px;">
+    <body style="width: 100%; margin:0;" class="font-sans">
+        <header style="margin-bottom: 24px;">
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
         <main>
