@@ -89,27 +89,27 @@ class GenerateReports implements ShouldQueue
         $folder_name = $this->administration->id.strtotime(now());
         $file_name = 'Vraagposten - '.date('d-m-Y').'.pdf';
 
-        // Browsershot::html(view('pdf.vraagposten', $data_vraagposten)->render())
-        // ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
-        // ->addChromiumArguments([
-        //     'font-render-hinting' => 'none',
-        // ])
-        // ->format('A4')
-        // // ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('/css/app.css'))]))
-        // ->margins(20, 20, 20, 20)
-        // ->landscape(true)
-        // ->waitUntilNetworkIdle()
-        // ->save('storage\public\\'.$file_name);
-
-        PDF::loadView('pdf.vraagposten', $data_vraagposten)
-        ->format('A4')
+        Browsershot::html(view('pdf.vraagposten', $data_vraagposten)->render())
+        ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
         ->addChromiumArguments([
             'font-render-hinting' => 'none',
         ])
-        ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
+        ->format('A4')
+        // ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('/css/app.css'))]))
         ->margins(20, 20, 20, 20)
         ->landscape(true)
-        ->storeAs($folder_name.'/', $file_name);
+        ->waitUntilNetworkIdle()
+        ->savePdf('storage\app\public\\'.$file_name);
+
+        // PDF::loadView('pdf.vraagposten', $data_vraagposten)
+        // ->format('A4')
+        // ->addChromiumArguments([
+        //     'font-render-hinting' => 'none',
+        // ])
+        // ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
+        // ->margins(20, 20, 20, 20)
+        // ->landscape(true)
+        // ->storeAs($folder_name.'/', $file_name);
 
         $report = new Report();
         $report->title = "Vraagposten";
@@ -119,7 +119,7 @@ class GenerateReports implements ShouldQueue
         $report->save();
 
         try{
-            $this->authenticated_user->notify(new SendReports([$folder_name.'/'.$file_name], count($rows), $this->administration, $report));
+            $this->authenticated_user->notify(new SendReports([$file_name], count($rows), $this->administration, $report));
         }
         catch(\Exception $e){ // Using a generic exception
             dump('Mail not sent');
