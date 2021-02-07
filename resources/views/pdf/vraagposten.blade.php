@@ -6,13 +6,6 @@
 </head>
     <style type="text/css">
 
-        @font-face {
-            font-family: 'Inter var';
-            src: url(data:application/font-woff2;charset=utf-8;base64,{{base64_encode(file_get_contents(public_path('fonts/Inter-roman.var.woff2')))}});
-            font-weight: normal;
-            font-style: normal;
-        }
-
         html {
         -webkit-print-color-adjust: exact;
         }
