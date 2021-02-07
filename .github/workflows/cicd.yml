@@ -2,9 +2,12 @@ name: CI
 on:
   push:
     branches: [development]
+    commit-ignore:
+    - [skip ci]
+    - [ci skip]
+    - ***NO_CI***
 jobs:
-  build:
-    if: "!contains(github.event.commits[0].message, '[skip ci]')"
+  tests:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:

@@ -12,9 +12,28 @@ use VerumConsilium\Browsershot\Facades\PDF;
 class PdfController extends Controller
 {
     public function vraagposten()
-    {   
+    {       
 
-        GenerateReports::dispatch(Administration::find(1), Auth::user());
+        return view('pdf.vraagposten', [
+          'administration_name' => 'Testadministratie vraagposten app',
+          'doc_type' => 'Vraagposten',
+          'date' => date('d-m-Y'),
+          'headings' => [
+            ['value'=>'Dagboek', 'align'=>'left'],
+            ['value'=>'Boekdatum', 'align'=>'left'],
+            ['value'=>'Omschrijving', 'align'=>'left'],
+            ['value'=>'Bedrag', 'align'=>'right'],
+            ['value'=>'Betaling/ontvangst', 'align'=>'left'],
+            ['value'=>'Factuurnummer', 'align'=>'left'],
+          ],
+          'lines' => [],
+          'contact' => ['name' => 'Esther Roelofs', 'email' => 'esther@oneaccoutants.nl'],
+          'logo' => Auth::user()->account->logo,
+          'account' => ['color'=>'#77BC1F']
+        ]);
+
+
+        //GenerateReports::dispatch(Administration::find(1), Auth::user());
 
         return;
 
@@ -120,10 +139,6 @@ class PdfController extends Controller
         //   ->margins(20, 20, 20, 20)
         //   ->landscape(true)
         //   ->storeAs($name.'/', 'Overzicht openstaande vraagposten - 27-01-01.pdf');
-
-          
-
-         
 
           //Browsershot::html($html)
 

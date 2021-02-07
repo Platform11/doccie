@@ -3,7 +3,6 @@
 
 <head>
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" rel="stylesheet">
 </head>
     <style type="text/css">
 
@@ -13,7 +12,7 @@
         
     </style>
    
-    <body style="width: 100%; margin:0;" style="font-family: 'Inter';">
+    <body style="width: 100%; margin:0;">
         <header style="margin-bottom: 24px;">
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
