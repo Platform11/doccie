@@ -57,7 +57,7 @@
             </div>
         </main>
         <footer style="text-align:right; margin-top:24px;">
-            Voor vragen kunt u contact opnemen met {{$contact['name']}} - <a class="font-medium" style="color: {{$account['color']}};" href="mailto:{{$contact['email']}}">{{$contact['email']}}</a> 
+            Voor vragen kunt u contact opnemen met {{$contact['name']}} - <a class="font-medium" style="font-style:bold;" href="mailto:{{$contact['email']}}">{{$contact['email']}}</a> 
         </footer>
     </body>
 </html>

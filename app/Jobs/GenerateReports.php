@@ -270,7 +270,6 @@ class GenerateReports implements ShouldQueue
               'email' => $this->authenticated_user->email
             ],
           'logo' => $this->authenticated_user->account->logo,
-          'account' => ['color'=>'#77BC1F']
         ];
     }
 

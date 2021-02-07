@@ -17,4 +17,5 @@ return [
     'created_successfully' => 'Administration successfully added',
     'contact_person_succesfully_updated' => 'Contactperson successfully updated',
     'info_succesfully_updated' => 'Information successfully updated',
+    'created_successfully' => 'Administration successfully created',
 ];

@@ -17,4 +17,5 @@ return [
     'created_successfully' => 'Administration succesvol toegevoegd.',
     'contact_person_succesfully_updated' => 'Contactpersoon succesvol gewijzigd',
     'info_succesfully_updated' => 'Informatie succesvol gewijzigd',
+    'created_successfully' => 'Administratie succesvol toegevoegd',
 ];
