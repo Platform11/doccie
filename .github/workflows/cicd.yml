@@ -3,9 +3,8 @@ on:
   push:
     branches: [development]
     commit-ignore:
-    - [skip ci]
-    - [ci skip]
-    - ***NO_CI***
+      - [skip ci]
+      - [ci skip]
 jobs:
   tests:
     runs-on: ${{ matrix.operating-system }}
