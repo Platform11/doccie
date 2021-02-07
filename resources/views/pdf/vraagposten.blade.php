@@ -19,7 +19,7 @@
         
     </style>
    
-    <body style="width: 100%; margin:0;">
+    <body style="width: 100%; margin:0; font-family: 'Inter var';">
         <header style="margin-bottom: 24px;">
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
