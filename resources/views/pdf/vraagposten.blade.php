@@ -20,7 +20,7 @@
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
         <main>
-            <h1 class="text-2xl" style="font-family:'Inter'; font-weight:700;">{{ $doc_type }} {{ $administration_name }}</h1>
+            <h1 class="text-2xl" style="font-family:'Inter';">{{ $doc_type }} {{ $administration_name }}</h1>
             Datum: {{$date}}
 
             <div class="mt-4">
