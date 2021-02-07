@@ -22,7 +22,7 @@ class Account extends Model implements HasMedia
 
     public function getLogoAttribute()
     {   
-        if(empty($this->getMedia('logo')))
+        if(empty($this->getMedia('logo')->first()))
         {
             return asset('images/doccie-logo.png');
         }
