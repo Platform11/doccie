@@ -91,6 +91,7 @@ class GenerateReports implements ShouldQueue
 
         Browsershot::html(view('pdf.vraagposten', $data_vraagposten)->render())
         ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
+         ->waitUntilNetworkIdle()
         ->addChromiumArguments([
             'font-render-hinting' => 'none',
         ])
