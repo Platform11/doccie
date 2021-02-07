@@ -99,6 +99,8 @@ class GenerateReports implements ShouldQueue
             'font-render-hinting' => 'none',
         ])
         ->waitUntilNetworkIdle()
+        //->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
+        ->format('A4')
         ->margins(20, 20, 20, 20)
         ->landscape(true)
         ->save($path_to_store);

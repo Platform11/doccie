@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html>  
 
+<head>
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+</head>
     <style type="text/css">
+
+        @font-face {
+            font-family: 'Inter var';
+            src: url(data:application/font-woff2;charset=utf-8;base64,{{base64_encode(file_get_contents(public_path('fonts/Inter-roman.var.woff2')))}});
+            font-weight: normal;
+            font-style: normal;
+        }
 
         html {
         -webkit-print-color-adjust: exact;
         }
 
-        {{file_get_contents(public_path('css/app.css'))}}
-
+        
     </style>
    
-    <body style="width: 100%; margin:0;">
+    <body style="width: 100%; margin:0; font-family: 'Inter var'">
         <header style="margin-bottom: 24px;">
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
