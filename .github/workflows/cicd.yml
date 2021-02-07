@@ -124,6 +124,7 @@ jobs:
           name: console
           path: tests/Browser/console
 
-    deploy:
+  deploy:
+    steps:
       - name: Trigger deployment
         run: curl -X POST https://ploi.io/webhooks/servers/15584/sites/39447/deploy?token=GdSQ8OqwJluPhy52GGDCe0t8WhN8WQe8Gqbgx0pbkRNKAN1KgD
