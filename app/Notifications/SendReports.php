@@ -20,6 +20,11 @@ class SendReports extends Notification implements ShouldQueue
     protected $files;
 
     /**
+     * @var array
+     */
+    protected $directories;
+
+    /**
      * @var int
      */
     protected $transaction_count;
@@ -39,9 +44,10 @@ class SendReports extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(array $files, int $transaction_count, Administration $administration, Report $report)
+    public function __construct(array $files, array $directories, int $transaction_count, Administration $administration, Report $report)
     {
         $this->files = $files;
+        $this->directories = $directories;
         $this->transaction_count = $transaction_count;
         $this->administration = $administration;
         $this->report = $report;
@@ -67,6 +73,7 @@ class SendReports extends Notification implements ShouldQueue
     {   
         return (new Mailable(
             $this->files,
+            $this->directories,
             $this->transaction_count,
             $this->administration,
             $notifiable,

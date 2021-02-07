@@ -14,6 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use VerumConsilium\Browsershot\Facades\PDF;
 use App\Notifications\SendReports;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
 
 class GenerateReports implements ShouldQueue
@@ -87,11 +88,15 @@ class GenerateReports implements ShouldQueue
         $data_vraagposten = $this->constructDataVraagposten($rows, $headings); 
 
         $folder_name = $this->administration->id.strtotime(now());
+
+        Storage::makeDirectory($folder_name);
+
         $file_name = 'Vraagposten - '.date('d-m-Y').'.pdf';
+        $path_to_store = storage_path() . '/app/' . $folder_name . '/'. $file_name;
 
         Browsershot::html(view('pdf.vraagposten', $data_vraagposten)->render())
         ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
-         ->waitUntilNetworkIdle()
+        ->waitUntilNetworkIdle()
         ->addChromiumArguments([
             'font-render-hinting' => 'none',
         ])
@@ -100,7 +105,7 @@ class GenerateReports implements ShouldQueue
         ->margins(20, 20, 20, 20)
         ->landscape(true)
         ->waitUntilNetworkIdle()
-        ->savePdf('storage\app\public\\'.$file_name);
+        ->save($path_to_store);
 
         // PDF::loadView('pdf.vraagposten', $data_vraagposten)
         // ->format('A4')
@@ -120,7 +125,7 @@ class GenerateReports implements ShouldQueue
         $report->save();
 
         try{
-            $this->authenticated_user->notify(new SendReports([$file_name], count($rows), $this->administration, $report));
+            $this->authenticated_user->notify(new SendReports([$path_to_store], [$folder_name], count($rows), $this->administration, $report));
         }
         catch(\Exception $e){ // Using a generic exception
             dump('Mail not sent');

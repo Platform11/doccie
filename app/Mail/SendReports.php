@@ -21,6 +21,11 @@ class SendReports extends Mailable
     protected $files;
 
     /**
+     * @var array
+     */
+    protected $directories;
+
+    /**
      * @var int
      */
     protected $transaction_count;
@@ -47,12 +52,14 @@ class SendReports extends Mailable
      */
     public function __construct(
         array $files, 
+        array $directories, 
         int $transaction_count, 
         Administration $administration, 
         User $user, 
         Report $report)
     {
         $this->files = $files;
+        $this->directories = $directories;
         $this->transaction_count = $transaction_count;
         $this->administration = $administration;
         $this->user = $user;
@@ -88,17 +95,17 @@ class SendReports extends Mailable
         $report = $this->report;
         $author = $this->user;
         $administration = $this->administration;
-        $files = $this->files;
+        $directories = $this->directories;
 
         $mail = $mail->withSwiftMessage(
-            function ($message) use($to, $cc, $bcc, $report, $author, $administration, $files){
+            function ($message) use($to, $cc, $bcc, $report, $author, $administration, $directories){
                 $message->to = $to;
                 $message->cc = $cc;
                 $message->bcc = $bcc;
                 $message->author = $author;
                 $message->report = $report;
                 $message->administration = $administration;
-                $message->files = $files;
+                $message->directories = $directories;
                 $headers = $message->getHeaders();
                 $headers->addTextHeader('X-PM-Metadata-model', 'Report');
                 $headers->addTextHeader('X-PM-Metadata-model_id', $report->id);
@@ -107,7 +114,7 @@ class SendReports extends Mailable
 
         foreach($this->files as $file)
         {
-            $mail->attach(\Storage::path($file));
+            $mail->attach($file);
         }
         return $mail;
     }

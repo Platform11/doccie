@@ -58,7 +58,7 @@ class LogSentMessage
 
             $event->message->administration->status = "sent";
             $event->message->administration->save();
-            $this->deleteFiles($event->message->files);
+            $this->deleteDirectories($event->message->directories);
         }
     }
 
@@ -72,12 +72,11 @@ class LogSentMessage
         $notification->save();
     }
 
-    private function deleteFiles($files)
+    private function deleteDirectories($directories)
     {
-        foreach($files as $file)
+        foreach($directories as $directory)
         {
-            $parts = explode('/', $file);
-            \Storage::deleteDirectory($parts[0]);
+            Storage::deleteDirectory($directory);
         }
     }
 }
