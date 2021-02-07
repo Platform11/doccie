@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html>  
 
-<head>
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-</head>
     <style type="text/css">
 
         html {
         -webkit-print-color-adjust: exact;
         }
 
-        
+        {{file_get_contents(public_path('css/app.css'))}}
+
     </style>
    
     <body style="width: 100%; margin:0;">
