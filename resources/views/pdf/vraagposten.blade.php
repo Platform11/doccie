@@ -3,8 +3,8 @@
 
     <style type="text/css">
 
-        @import url(https://fonts.googleapis.com/css?family=Inter);
-        body {
+        @import url(https://fonts.googleapis.com/css?family=Inter:wght@400;500;600;700;800&display=swap);
+        body, h1 {
           font-family: 'Inter', sans-serif;
         }
 
@@ -34,7 +34,7 @@
                             @foreach($headings as $heading)
                             <th>
                                 <div style="padding: 4px 8px;">
-                                    {{$heading['value']}}
+                                    <strong>{{$heading['value']}}</strong>
                                 </div>
                             </th>
                             @endforeach
