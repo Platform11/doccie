@@ -95,11 +95,11 @@ class GenerateReports implements ShouldQueue
         $path_to_store = storage_path() . '/app/' . $folder_name . '/'. $file_name;
 
         Browsershot::html(view('pdf.vraagposten', $data_vraagposten)->render())
+        ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
         ->addChromiumArguments([
             'font-render-hinting' => 'none',
         ])
         ->waitUntilNetworkIdle()
-        //->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
         ->format('A4')
         ->margins(20, 20, 20, 20)
         ->landscape(true)
