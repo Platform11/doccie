@@ -3,16 +3,17 @@
 
 <head>
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" rel="stylesheet">
 </head>
     <style type="text/css">
 
         html {
         -webkit-print-color-adjust: exact;
         }
-         
+        
     </style>
    
-    <body style="width: 100%; margin:0;" class="font-sans">
+    <body style="width: 100%; margin:0;" style="font-family: 'Inter';">
         <header style="margin-bottom: 24px;">
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
