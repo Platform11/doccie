@@ -13,7 +13,7 @@
     </style>
    
     <body style="width: 100%; margin:0;">
-        <header style="margin-bottom: 12px;">
+        <header style="margin-bottom: 16px;">
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
         <main>

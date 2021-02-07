@@ -90,9 +90,10 @@ class GenerateReports implements ShouldQueue
 
         PDF::loadView('pdf.vraagposten', $data_vraagposten)
         ->format('A4')
-        ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('css/app.css'))]))
+        ->setOption('addStyleTag', json_encode(['content' => file_get_contents(public_path('/css/app.css'))]))
         ->margins(20, 20, 20, 20)
         ->landscape(true)
+        ->waitUntilNetworkIdle()
         ->storeAs($folder_name.'/', $file_name);
 
         $report = new Report();
