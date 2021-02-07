@@ -3,8 +3,8 @@
 
     <style type="text/css">
 
-        @import url(https://fonts.googleapis.com/css?family=Inter:wght@400;500;600;700;800&display=swap);
-        body, h1 {
+        @import url(https://fonts.googleapis.com/css2?family=Inter&display=swap);
+        body {
           font-family: 'Inter', sans-serif;
         }
 
@@ -20,7 +20,7 @@
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
         <main>
-            <h1 class="text-2xl">{{ $doc_type }} {{ $administration_name }}</h1>
+            <h1 class="text-2xl" style="font-family:'Inter'; font-weight:700;">{{ $doc_type }} {{ $administration_name }}</h1>
             Datum: {{$date}}
 
             <div class="mt-4">
