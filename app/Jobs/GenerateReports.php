@@ -207,6 +207,13 @@ class GenerateReports implements ShouldQueue
           $lines[] = $line;
         }
 
+        //sort elements by date
+        usort($lines, function($element1, $element2){
+          $datetime1 = strtotime($element1[1]); 
+          $datetime2 = strtotime($element2[1]); 
+          return $datetime1 - $datetime2; 
+        }); 
+
         return $this->transformLines($lines, $headings);
     }
 
@@ -226,7 +233,7 @@ class GenerateReports implements ShouldQueue
             if($i == 3)
             {
               $value = '&nbsp;';
-              if(strpos($value, 'BNK') !== false)
+              if(strpos($line[0], 'BNK') !== false)
               {
                 if((float)$line[3] > 0)
                 {

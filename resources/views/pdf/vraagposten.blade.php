@@ -64,9 +64,6 @@
                                 <div class="inline-block w-full h-full leading-none bg-gray-100">
                                     <div style="padding: 4px 8px">
                                     {!! $line[$cell] === '' ? '&nbsp;' : $line[$cell] !!}
-                                    @if($line[$cell] == 'Ontvangst')
-                                    Ontvangstd ads asda sdas das das das dasd asd 
-                                    @endif
                                     </div>
                                 </div>
                             </td>
