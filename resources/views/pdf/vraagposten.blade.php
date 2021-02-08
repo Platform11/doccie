@@ -3,9 +3,18 @@
 
     <style type="text/css">
 
-        @import url(https://fonts.googleapis.com/css2?family=Inter&display=swap);
+        /* @import url(https://fonts.googleapis.com/css2?family=Inter&display=swap);
         body {
           font-family: 'Inter', sans-serif;
+        } */
+
+        @font-face {
+            font-family: "Inter var";
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: normal;
+            font-named-instance: "Regular";
+            src: url("data:application/font-woff2;charset=utf-8;base64,{{base64_encode(file_get_contents(public_path('fonts/Inter-roman.var.woff2')))}}") format("woff2");
         }
 
         html {
@@ -15,12 +24,12 @@
         
     </style>
    
-    <body style="width: 100%; margin:0; font-family:'Inter';">
+    <body style="width: 100%; margin:0; font-family:'Inter var';">
         <header style="margin-bottom: 24px;">
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
         <main>
-            <h1 class="text-2xl" style="font-family:'Inter';">{{ $doc_type }} {{ $administration_name }}</h1>
+            <h1 class="text-2xl" style="font-family:'Inter var';">{{ $doc_type }} {{ $administration_name }}</h1>
             Datum: {{$date}}
 
             <div class="mt-4">
@@ -34,7 +43,7 @@
                             @foreach($headings as $heading)
                             <th>
                                 <div style="padding: 4px 8px;">
-                                    <strong>{{$heading['value']}}</strong>
+                                    {{$heading['value']}}
                                 </div>
                             </th>
                             @endforeach
