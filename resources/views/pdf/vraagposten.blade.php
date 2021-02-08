@@ -60,7 +60,7 @@
                         @foreach($lines as $line)
                         <tr>
                             @foreach($line as $cell=>$index)
-                            <td valign="top" style="text-align: {{$headings[$cell]['align']}}; height: 1px; min-width:100px;">
+                            <td valign="top" style="text-align: {{$headings[$cell]['align']}}; height: 1px; {{$headings[$cell]['value'] == 'Boekdatum' ? 'width: 120px;':''}}">
                                 <div class="inline-block w-full h-full leading-none bg-gray-100">
                                     <div style="padding: 4px 8px">
                                     {!! $line[$cell] === '' ? '&nbsp;' : $line[$cell] !!}
