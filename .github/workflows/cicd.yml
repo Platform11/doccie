@@ -3,139 +3,137 @@ on:
   push:
     branches: [development]
 jobs:
-  first:
-    tests:
-      runs-on: ${{ matrix.operating-system }}
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
-      strategy:
-        matrix:
-          operating-system: [ubuntu-latest]
-          php-versions: ["7.4"]
-      name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
-      env:
-        extensions: exif, pcntl
-        key: php-extensions-cache-v1 # can be any string, change to clear the extension cache.
+  tests:
+    runs-on: ${{ matrix.operating-system }}
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ["7.4"]
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+    env:
+      extensions: exif, pcntl
+      key: php-extensions-cache-v1 # can be any string, change to clear the extension cache.
 
-      # Service containers to run with `container-job`
-      services:
-        redis:
-          image: redis
-          options: >-
-            --health-cmd "redis-cli ping"
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
-          ports:
-            - 6379:6379
+    # Service containers to run with `container-job`
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
 
-      steps:
-        - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-        - name: Setup cache environment
-          id: extcache
-          uses: shivammathur/cache-extensions@v1
-          with:
-            php-version: ${{ matrix.php-versions }}
-            extensions: ${{ env.extensions }}
-            key: ${{ env.key }}
+      - name: Setup cache environment
+        id: extcache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: ${{ env.extensions }}
+          key: ${{ env.key }}
 
-        - name: Cache extensions
-          uses: actions/cache@v2
-          with:
-            path: ${{ steps.extcache.outputs.dir }}
-            key: ${{ steps.extcache.outputs.key }}
-            restore-keys: ${{ steps.extcache.outputs.key }}
+      - name: Cache extensions
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
 
-        - name: Setup PHP
-          uses: shivammathur/setup-php@v2
-          with:
-            php-version: ${{ matrix.php-versions }}
-            extensions: ${{ env.extensions }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: ${{ env.extensions }}
 
-        - name: Prepare The Environment
-          run: cp .env.cicd .env
+      - name: Prepare The Environment
+        run: cp .env.cicd .env
 
-        - name: Create Database
-          run: |
-            sudo systemctl start mysql
-            mysql --user="root" --password="root" -e "CREATE DATABASE doccie_app_cicd character set UTF8mb4 collate utf8mb4_bin;"
+      - name: Create Database
+        run: |
+          sudo systemctl start mysql
+          mysql --user="root" --password="root" -e "CREATE DATABASE doccie_app_cicd character set UTF8mb4 collate utf8mb4_bin;"
 
-        #Cache composer dependancies
-        - name: Get Composer Cache Directory
-          id: composer-cache
-          run: |
-            echo "::set-output name=dir::$(composer config cache-files-dir)"
+      #Cache composer dependancies
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-        - name: Cache Composer Downloads
-          uses: actions/cache@v2
-          with:
-            path: ${{ steps.composer-cache.outputs.dir }}
-            key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-            restore-keys: |
-              ${{ runner.os }}-composer-
+      - name: Cache Composer Downloads
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
-        - name: Cache PHP dependencies
-          uses: actions/cache@v2
-          with:
-            path: vendor
-            key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
+      - name: Cache PHP dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
 
-        #Install composer
-        - name: Install Composer Dependencies
-          run: composer install --no-progress --prefer-dist --optimize-autoloader
+      #Install composer
+      - name: Install Composer Dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
-        - name: Pull assets
-          run: php artisan lasso:pull
+      - name: Pull assets
+        run: php artisan lasso:pull
 
-        - name: Run migrations
-          run: php artisan migrate
+      - name: Run migrations
+        run: php artisan migrate
 
-        # - name: Run LaraStan
-        #   run: ./vendor/bin/phpstan analyse app -l 6
+      # - name: Run LaraStan
+      #   run: ./vendor/bin/phpstan analyse app -l 6
 
-        - name: Run Pest Tests
-          run: ./vendor/bin/pest
+      - name: Run Pest Tests
+        run: ./vendor/bin/pest
 
-        #Prepare dusk tests
-        - name: Upgrade Chrome Driver
-          run: php artisan dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
+      #Prepare dusk tests
+      - name: Upgrade Chrome Driver
+        run: php artisan dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
 
-        - name: Start Chrome Driver
-          run: ./vendor/laravel/dusk/bin/chromedriver-linux &
+      - name: Start Chrome Driver
+        run: ./vendor/laravel/dusk/bin/chromedriver-linux &
 
-        - name: Run Laravel Server
-          run: php artisan serve &
+      - name: Run Laravel Server
+        run: php artisan serve &
 
-        - name: Run Dusk Tests
-          env:
-            APP_URL: "http://127.0.0.1:8000"
-          run: php artisan dusk
+      - name: Run Dusk Tests
+        env:
+          APP_URL: "http://127.0.0.1:8000"
+        run: php artisan dusk
 
-        - name: Upload Screenshots
-          if: failure()
-          uses: actions/upload-artifact@v2
-          with:
-            name: screenshots
-            path: tests/Browser/screenshots
+      - name: Upload Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: tests/Browser/screenshots
 
-        - name: Upload Console Logs
-          if: failure()
-          uses: actions/upload-artifact@v2
-          with:
-            name: console
-            path: tests/Browser/console
+      - name: Upload Console Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: console
+          path: tests/Browser/console
 
-  second:
-    deploy:
-      runs-on: ${{ matrix.operating-system }}
-      strategy:
-        matrix:
-          operating-system: [ubuntu-latest]
-          php-versions: ["7.4"]
-      name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
-      env:
-        extensions: exif, pcntl
-        key: php-extensions-cache-v1 # can be any string, change to clear the extension cache.
-      steps:
-        - name: Trigger deployment
-          run: curl -X POST https://ploi.io/webhooks/servers/15584/sites/39447/deploy?token=GdSQ8OqwJluPhy52GGDCe0t8WhN8WQe8Gqbgx0pbkRNKAN1KgD
+  deploy:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ["7.4"]
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+    env:
+      extensions: exif, pcntl
+      key: php-extensions-cache-v1 # can be any string, change to clear the extension cache.
+    steps:
+      - name: Trigger deployment
+        run: curl -X POST https://ploi.io/webhooks/servers/15584/sites/39447/deploy?token=GdSQ8OqwJluPhy52GGDCe0t8WhN8WQe8Gqbgx0pbkRNKAN1KgD
