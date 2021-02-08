@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html>  
-
-<head>
-     <meta charset="UTF-8">
-</head>
+    <head>
+        <meta charset="UTF-8">
+    </head>
 
     <style type="text/css">
-
-        /* @import url(https://fonts.googleapis.com/css2?family=Inter&display=swap);
-        body {
-          font-family: 'Inter', sans-serif;
-        } */
-
-        /* @font-face {
+        @font-face {
             font-family: "Inter var";
             font-weight: 100 900;
             font-display: swap;
@@ -21,20 +14,18 @@
             src: url("data:application/font-woff2;charset=utf-8;base64,{{base64_encode(file_get_contents(public_path('fonts/Inter-roman.var.woff2')))}}") format("woff2");
         }
 
-                @font-face {
+        @font-face {
             font-family: "Inter var";
             font-weight: 100 900;
             font-display: swap;
             font-style: italic;
             font-named-instance: "Italic";
             src: url("data:application/font-woff2;charset=utf-8;base64,{{base64_encode(file_get_contents(public_path('fonts/Inter-italic.var.woff2')))}}") format("woff2");
-        } */
+        }
 
         html {
         -webkit-print-color-adjust: exact;
         }
-
-        
     </style>
    
     <body style="width: 100%; margin:0; font-family:'Inter var';">
