@@ -226,7 +226,7 @@ class GenerateReports implements ShouldQueue
             if($i == 3)
             {
               $value = '&nbsp;';
-              if($line[0] == 'BNK')
+              if(strpos('BNK', $line[0]) !== false)
               {
                 if((float)$line[3] > 0)
                 {
@@ -297,7 +297,7 @@ class GenerateReports implements ShouldQueue
 
     private function transformDagboekValue($value)
     {
-      if($value == 'BNK')
+      if(strpos('BNK', $value) !== false)
       {
         return 'Bankmutatie';
       }

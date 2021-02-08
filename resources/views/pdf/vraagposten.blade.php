@@ -2,7 +2,10 @@
 <html>  
     <head>
         <meta charset="UTF-8">
+        {{-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> --}}
     </head>
+
+    
 
     <style type="text/css">
         @font-face {
@@ -57,9 +60,14 @@
                         @foreach($lines as $line)
                         <tr>
                             @foreach($line as $cell=>$index)
-                            <td style="text-align: {{$headings[$cell]['align']}};">
-                                <div style="padding: 4px 8px" class="bg-gray-100">
+                            <td valign="top" style="text-align: {{$headings[$cell]['align']}}; height: 1px;">
+                                <div class="inline-block w-full h-full leading-none bg-gray-100">
+                                    <div style="padding: 4px 8px">
                                     {!! $line[$cell] === '' ? '&nbsp;' : $line[$cell] !!}
+                                    @if($line[$cell] == 'Ontvangst')
+                                    Ontvangstd ads asda sdas das das das dasd asd 
+                                    @endif
+                                    </div>
                                 </div>
                             </td>
                             @endforeach

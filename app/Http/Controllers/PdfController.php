@@ -26,7 +26,10 @@ class PdfController extends Controller
             ['value'=>'Betaling/ontvangst', 'align'=>'left'],
             ['value'=>'Factuurnummer', 'align'=>'left'],
           ],
-          'lines' => [],
+          'lines' => [
+              ['test', 'test', 'test', 'test','testdasdasdasda asdasdas as das as dasd asd asd as','test'],
+              ['test', 'test', 'test', 'test','testdasdasdasda asdasdas as das as dasd asd asd as','test'],
+          ],
           'contact' => ['name' => 'Esther Roelofs', 'email' => 'esther@oneaccoutants.nl'],
           'logo' => Auth::user()->account->logo,
           'account' => ['color'=>'#77BC1F']
