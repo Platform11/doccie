@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>  
 
+<head>
+     <meta charset="UTF-8">
+</head>
+
     <style type="text/css">
 
         /* @import url(https://fonts.googleapis.com/css2?family=Inter&display=swap);
@@ -17,6 +21,15 @@
             src: url("data:application/font-woff2;charset=utf-8;base64,{{base64_encode(file_get_contents(public_path('fonts/Inter-roman.var.woff2')))}}") format("woff2");
         }
 
+        @font-face {
+            font-family: "Inter var";
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: italic;
+            font-named-instance: "Italic";
+            src: url("data:application/font-woff2;charset=utf-8;base64,{{base64_encode(file_get_contents(public_path('fonts/Inter-italic.var.woff2')))}}") format("woff2");
+        }
+
         html {
         -webkit-print-color-adjust: exact;
         }
@@ -24,12 +37,12 @@
         
     </style>
    
-    <body style="width: 100%; margin:0; font-family:'Inter var';">
+    <body style="width: 100%; margin:0;">
         <header style="margin-bottom: 24px;">
            <img src="{{ $logo }}" class="logo" style="height: 32px;">
         </header>
         <main>
-            <h1 class="text-2xl" style="font-family:'Inter var';">{{ $doc_type }} {{ $administration_name }}</h1>
+            <h1 class="text-2xl">{{ $doc_type }} {{ $administration_name }}</h1>
             Datum: {{$date}}
 
             <div class="mt-4">
