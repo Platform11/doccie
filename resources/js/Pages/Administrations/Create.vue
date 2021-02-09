@@ -76,6 +76,15 @@
                                                 class="col-span-6 sm:col-span-2"
                                             >
                                                 <text-input
+                                                    v-model="form.debtors_code"
+                                                    :error="errors.debtors_code"
+                                                    label="Debiteuren rekening"
+                                                ></text-input>
+                                            </div>
+                                            <div
+                                                class="col-span-6 sm:col-span-2"
+                                            >
+                                                <text-input
                                                     v-model="
                                                         form.creditors_code
                                                     "
@@ -83,15 +92,6 @@
                                                         errors.creditors_code
                                                     "
                                                     label="Crediteuren rekening"
-                                                ></text-input>
-                                            </div>
-                                            <div
-                                                class="col-span-6 sm:col-span-2"
-                                            >
-                                                <text-input
-                                                    v-model="form.debtors_code"
-                                                    :error="errors.debtors_code"
-                                                    label="Debiteuren rekening"
                                                 ></text-input>
                                             </div>
                                         </div>
