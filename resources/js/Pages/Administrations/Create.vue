@@ -59,6 +59,41 @@
                                                     label="Administratiecode"
                                                 ></text-input>
                                             </div>
+                                            <div
+                                                class="col-span-6 sm:col-span-2"
+                                            >
+                                                <text-input
+                                                    v-model="
+                                                        form.call_posts_code
+                                                    "
+                                                    :error="
+                                                        errors.call_posts_code
+                                                    "
+                                                    label="Vraagposten rekening"
+                                                ></text-input>
+                                            </div>
+                                            <div
+                                                class="col-span-6 sm:col-span-2"
+                                            >
+                                                <text-input
+                                                    v-model="
+                                                        form.creditors_code
+                                                    "
+                                                    :error="
+                                                        errors.creditors_code
+                                                    "
+                                                    label="Crediteuren rekening"
+                                                ></text-input>
+                                            </div>
+                                            <div
+                                                class="col-span-6 sm:col-span-2"
+                                            >
+                                                <text-input
+                                                    v-model="form.debtors_code"
+                                                    :error="errors.debtors_code"
+                                                    label="Debiteuren rekening"
+                                                ></text-input>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -144,10 +179,10 @@
                                     <h3
                                         class="text-lg font-medium leading-6 text-gray-900"
                                     >
-                                        Contactpersoon
+                                        Relatiebeheerder
                                     </h3>
                                     <p class="mt-1 text-sm text-gray-600">
-                                        Informatie van de contactpersoon
+                                        Relatiebeheerder van deze administratie
                                     </p>
                                 </div>
                             </div>
@@ -229,6 +264,9 @@ export default {
             form: {
                 name: "",
                 code: "",
+                call_posts_code: 2999,
+                creditors_code: 1600,
+                debtors_code: 1600,
                 contact_first_name: "",
                 contact_last_name: "",
                 contact_email: "",

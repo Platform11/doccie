@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Administration;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\BelongsToAccount;
 
-class StoreAdministrationRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,6 +27,9 @@ class StoreAdministrationRequest extends FormRequest
         return [
             'name' => 'required',
             'code' => 'required|numeric',
+            'call_posts_code' => 'numeric|required',
+            'creditors_code' => 'numeric',
+            'debtors_code' => 'numeric',
             'contact_first_name' => 'required',
             'contact_last_name' => 'required',
             'contact_email' => 'required|email',

@@ -36,7 +36,7 @@
                     </td>
 
                     <td>
-                        6
+                        {{ JSON.parse(report.data).transactions }}
                     </td>
 
                     <td>

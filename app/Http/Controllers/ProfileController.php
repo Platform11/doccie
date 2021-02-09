@@ -8,8 +8,8 @@ use App\Http\Requests\Profile\UpdateRequest;
 use App\Http\Requests\Profile\UpdatePasswordRequest;
 use App\Http\Requests\Profile\UpdateTwinfieldCredentialsRequest;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 class ProfileController extends Controller

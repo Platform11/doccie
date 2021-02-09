@@ -6,7 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Administration;
 use App\Jobs\GenerateReports;
-use App\Http\Requests\StoreAdministrationRequest;
+use App\Http\Requests\Administration\StoreRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\Administration\UpdateRelationManagerRequest;
@@ -28,7 +28,7 @@ class AdministrationController extends Controller
         ]);
     }
 
-    public function store(StoreAdministrationRequest $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {   
         $validated = $request->validated();
         
@@ -75,6 +75,9 @@ class AdministrationController extends Controller
         $administration = Administration::find($request->validated()['administration_id']);
         $administration->name = $request->validated()['name'];
         $administration->code = $request->validated()['code'];
+        $administration->call_posts_code = $request->validated()['call_posts_code'];
+        $administration->creditors_code = $request->validated()['creditors_code'];
+        $administration->debtors_code = $request->validated()['debtors_code'];
         $administration->save();
 
         return Redirect::route('administrations.show', ['administration' => $administration->id])->with('success', __('administrations.info_succesfully_updated'));

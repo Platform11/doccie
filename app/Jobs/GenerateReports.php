@@ -55,32 +55,14 @@ class GenerateReports implements ShouldQueue
 
         $connector = $this->setupConnector();
         $columns = $this->setupColumnsVraagposten();
-        $sortFields[] = new \PhpTwinfield\BrowseSortField('fin.trs.head.date');
-
+        
         if($connector)
         {
-          try {
-              $browseData = $connector->getBrowseData('030_3', $columns, $sortFields);
-          } catch (\Exception $e) {
-            sleep(5);
-            try {
-              $browseData = $connector->getBrowseData('030_3', $columns, $sortFields);
-            } catch (\Exception $e) {
-                $this->administration->status = "error";
-                $this->administration->save();
-                return;
-            }
-          }
+          $browseData = $this->getBrowseData($connector, $columns);
         }
         else {
           throw new \Exception('office_does_not_exist');
         }
-
-        $connection = new \PhpTwinfield\Secure\WebservicesAuthentication(
-            $this->authenticated_user->twinfield_username,
-            $this->authenticated_user->twinfield_password,
-            $this->authenticated_user->account->twinfield_office_code,
-        );
 
         $headings = $this->setupHeadings();
         $rows = $this->processBrowseData($browseData, $headings);
@@ -150,8 +132,8 @@ class GenerateReports implements ShouldQueue
             ->setVisible(false)
             ->setAsk(true)
             ->setOperator(\PhpTwinfield\Enums\BrowseColumnOperator::BETWEEN())
-            ->setFrom('2999')
-            ->setTo('2999');
+            ->setFrom($this->administration->call_posts_code)
+            ->setTo($this->administration->call_posts_code);
 
         $columns[] = (new \PhpTwinfield\BrowseColumn())
             ->setField('fin.trs.head.code')
@@ -179,6 +161,26 @@ class GenerateReports implements ShouldQueue
             ->setVisible(true);
 
         return $columns;
+    }
+
+    private function getBrowseData($connector, $columns)
+    {
+          $sortFields[] = new \PhpTwinfield\BrowseSortField('fin.trs.head.date');
+
+          try {
+              $browseData = $connector->getBrowseData('030_3', $columns, $sortFields);
+          } catch (\Exception $e) {
+            sleep(5);
+            try {
+              $browseData = $connector->getBrowseData('030_3', $columns, $sortFields);
+            } catch (\Exception $e) {
+                $this->administration->status = "error";
+                $this->administration->save();
+                return;
+            }
+          }
+
+          return $browseData;
     }
 
     private function processBrowseData($browseData, $headings)

@@ -36,6 +36,9 @@ class UpdateInfoRequest extends FormRequest
              'administration_id' => 'required|exists:administrations,id',
              'name' => 'required',
              'code' => 'required|numeric',
+             'call_posts_code' => 'numeric|required',
+             'creditors_code' => 'numeric',
+             'debtors_code' => 'numeric',
         ];
     }
 }

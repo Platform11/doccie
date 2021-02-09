@@ -5,8 +5,6 @@
         {{-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> --}}
     </head>
 
-    
-
     <style type="text/css">
         @font-face {
             font-family: "Inter var";

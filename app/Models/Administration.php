@@ -16,13 +16,15 @@ class Administration extends Model
     protected $fillable = [
         'name',
         'code',
+        'call_posts_code',
+        'creditors_code',
+        'debtors_code',
         'relation_manager_id',
         'contact_first_name',
         'contact_last_name',
         'contact_email',
         'account_id',
         'status',
-
     ];
 
     protected $appends = [

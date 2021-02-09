@@ -4,7 +4,7 @@
             <div class="md:col-span-1">
                 <div class="px-4 sm:px-0">
                     <h3 class="text-lg font-medium leading-6 text-gray-900">
-                        General
+                        Algemeen
                     </h3>
                     <p class="mt-1 text-sm text-gray-600">
                         Algemene administratieinformatie
@@ -20,6 +20,7 @@
                                     <text-input
                                         v-model="form.name"
                                         label="Naam"
+                                        :error="errors.name"
                                     ></text-input>
                                 </div>
 
@@ -27,6 +28,28 @@
                                     <text-input
                                         v-model="form.code"
                                         label="Administratiecode"
+                                        :error="errors.code"
+                                    ></text-input>
+                                </div>
+                                <div class="col-span-6 sm:col-span-2">
+                                    <text-input
+                                        v-model="form.call_posts_code"
+                                        :error="errors.call_posts_code"
+                                        label="Vraagposten rekening"
+                                    ></text-input>
+                                </div>
+                                <div class="col-span-6 sm:col-span-2">
+                                    <text-input
+                                        v-model="form.creditors_code"
+                                        :error="errors.creditors_code"
+                                        label="Crediteuren rekening"
+                                    ></text-input>
+                                </div>
+                                <div class="col-span-6 sm:col-span-2">
+                                    <text-input
+                                        v-model="form.debtors_code"
+                                        :error="errors.debtors_code"
+                                        label="Debiteuren rekening"
                                     ></text-input>
                                 </div>
                             </div>
@@ -53,7 +76,8 @@ export default {
         LoadingButton
     },
     props: {
-        administration: Object
+        administration: Object,
+        errors: Object
     },
     data() {
         return {
@@ -61,7 +85,10 @@ export default {
             form: {
                 administration_id: this.administration.id,
                 name: this.administration.name,
-                code: this.administration.code
+                code: this.administration.code,
+                call_posts_code: this.administration.call_posts_code,
+                creditors_code: this.administration.creditors_code,
+                debtors_code: this.administration.debtors_code
             }
         };
     },
