@@ -17,13 +17,14 @@ class CreateAdministrationsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
-            $table->unsignedBigInteger('account_id');
-            $table->unsignedBigInteger('relation_manager_id');
+            $table->string('call_posts_code')->nullable();
+            $table->string('creditors_code')->nullable();
+            $table->string('debtors_code')->nullable();
             $table->string('contact_first_name');
             $table->string('contact_last_name');
             $table->string('contact_email');
-            $table->string('status');
-            $table->string('error_reason')->nullable();
+            $table->unsignedBigInteger('account_id');
+            $table->unsignedBigInteger('relation_manager_id');
             $table->softDeletes();
             $table->timestamps();
 

@@ -30,7 +30,6 @@ class Account extends Model implements HasMedia
         return $this->getMedia('logo')[0]->getFullUrl();
     }
 
-
     public function users(): HasMany {
         return $this->hasMany('App\Models\User');
     }

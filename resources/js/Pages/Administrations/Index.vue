@@ -10,7 +10,6 @@
                         <inertia-link :href="route('administrations.create')">
                             <div class="btn btn-primary">Toevoegen</div>
                         </inertia-link>
-                        <!-- <div class="btn btn-primary">Verstuur overzichten</div> -->
                     </div>
                 </div>
 
@@ -26,26 +25,29 @@
 
 <script>
 import Layout from "@/Shared/Layout";
-import TableAdminstrations from "@/Components/Tables/Administrations";
+import TableAdminstrations from "@/Components/Tables/Administrations/Base";
 
 export default {
-    metaInfo: { title: "Gebruikers" },
+    metaInfo: { title: "Administraties" },
     components: {
         Layout,
         TableAdminstrations
     },
+
     props: {
         administrations: Array
     },
+
     data() {
-        return {};
+        return {
+            administrationsTemp: this.administrations
+        };
     },
 
     created() {
-        this.pageTitle = "Gebruikers";
+        this.pageTitle = "Administraties";
     },
 
-    methods: {},
     computed: {
         pageTitle: {
             set(pageTitle) {

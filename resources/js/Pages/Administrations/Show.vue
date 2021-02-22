@@ -44,6 +44,15 @@
                                 <div class="border-t border-gray-200"></div>
                             </div>
                         </div>
+                        <EditReportsToIncludeInOverview
+                            :administration="administration"
+                            :errors="errors"
+                        />
+                        <div class="hidden sm:block" aria-hidden="true">
+                            <div class="py-8">
+                                <div class="border-t border-gray-200"></div>
+                            </div>
+                        </div>
                         <EditContactPerson
                             :administration="administration"
                             :errors="errors"
@@ -65,8 +74,11 @@
                             :colleagues="colleagues"
                         />
                     </div>
-                    <div v-show="activeTab == 'sent-reports'" class="w-full">
-                        <TableReports :reports="administration.reports" />
+                    <div v-show="activeTab == 'sent-overviews'" class="w-full">
+                        <TableOverviews
+                            :overviews="overviews"
+                            :administration-id="administration.id"
+                        />
                     </div>
                 </div>
             </div>
@@ -85,32 +97,35 @@
 <script>
 import Layout from "@/Shared/Layout";
 import EditGeneralInformation from "@/Pages/Administrations/Edit/General";
+import EditReportsToIncludeInOverview from "@/Pages/Administrations/Edit/ReportsToIncludeInOverview";
 import EditContactPerson from "@/Pages/Administrations/Edit/ContactPerson";
 import EditRelationManager from "@/Pages/Administrations/Edit/RelationManager";
 import ModalConfirmDanger from "@/Components/Modals/ConfirmDanger";
-import TableReports from "@/Components/Tables/Reports";
+import TableOverviews from "@/Components/Tables/Overviews/Base";
 
 export default {
     // metaInfo: { title: this.user.name },
     components: {
         Layout,
         EditGeneralInformation,
+        EditReportsToIncludeInOverview,
         EditContactPerson,
         EditRelationManager,
-        TableReports,
+        TableOverviews,
         ModalConfirmDanger
     },
     props: {
         administration: Object,
+        overviews: Array,
         colleagues: Array,
         errors: Object
     },
     data() {
         return {
             showConfirmDelete: false,
-            activeTab: "sent-reports",
+            activeTab: "sent-overviews",
             tabs: [
-                { label: "Verstuurde overzichten", id: "sent-reports" },
+                { label: "Verstuurde overzichten", id: "sent-overviews" },
                 { label: "Gegevens", id: "info" }
             ]
         };

@@ -28,7 +28,7 @@ class LogFailedLogin
     public function handle(Failed $event)
     {   
         activity()
-        ->withProperties(['username' => $event->credentials['email'], 'ip_address'=>$_SERVER['REMOTE_ADDR'], 'user_agent'=>Browser::platformName().', '.Browser::browserName()])
+        ->withProperties(['username' => $event->credentials['email'], 'ip_address'=>$_SERVER['REMOTE_ADDR'], 'user_agent'=>Browser::platformName() . ', '. Browser::browserName()])
         ->log('login-failed');
     }
 }

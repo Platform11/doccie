@@ -19,8 +19,7 @@ class CreateNotificationsTable extends Migration
             $table->morphs('sender', 'sender');
             $table->string('channel');
             $table->string('recipient');
-            $table->string('delivery_status')->nullable();
-            $table->json('delivery_meta')->nullable();
+            $table->json('delivery_meta_data')->nullable();
             $table->timestamps();
         });
     }

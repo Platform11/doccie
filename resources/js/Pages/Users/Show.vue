@@ -74,7 +74,7 @@ import Layout from "@/Shared/Layout";
 import EditGeneralInformation from "@/Pages/Users/Edit/General";
 import EditTwinfieldCredentials from "@/Pages/Users/Edit/TwinfieldCredentials";
 import ModalConfirmDanger from "@/Components/Modals/ConfirmDanger";
-import TableAdminstrations from "@/Components/Tables/Administrations";
+import TableAdminstrations from "@/Components/Tables/Administrations/Base";
 
 export default {
     // metaInfo: { title: this.user.name },

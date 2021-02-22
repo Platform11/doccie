@@ -8,8 +8,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Report;
-use App\Models\Notification;
+use App\Models\Overview;
+use App\Events\Notification\Delivered as NotificationDelivered;
+use App\Events\Notification\Bounced as NotificationBounced;
 
 class ProcessMailFeedback implements ShouldQueue
 {
@@ -49,29 +50,24 @@ class ProcessMailFeedback implements ShouldQueue
 
         if(empty($model_notification))
         {   
-            // If there is no notification for the given recipient investigation is required.
             $this->fail();
         }
           
         if($this->request->RecordType == 'Delivery')
         {
-          $model_notification->delivery_status = 'delivered';
+          NotificationDelivered::dispatch($model_notification, json_encode($this->request));
         }
 
         if($this->request->RecordType == 'HardBounce')
         {
-          $model_notification->delivery_status = 'bounced';
+          NotificationBounced::dispatch($model_notification, json_encode($this->request));
         }
-
-        $model_notification->delivery_meta = json_encode($this->request);
-
-        $model_notification->save();
     }
 
     private function getModel() {
-        if($this->request->Metadata->model == 'Report')
+        if($this->request->Metadata->model == 'Overview')
         {   
-            return Report::find((int) $this->request->Metadata->model_id);
+            return Overview::find((int) $this->request->Metadata->model_id);
         }
     }
 

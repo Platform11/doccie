@@ -28,5 +28,17 @@ class AuthServiceProvider extends ServiceProvider
         Gate::after(function ($user, $ability) {
             return $user->hasRole('super admin'); // note this returns boolean
         });
+
+        Gate::define('viewWebSocketsDashboard', function ($user = null) {
+            if(empty($user))
+            {
+                return;
+            }
+            
+            return in_array($user->email, [
+                'nick@platform11.nl',
+                'esther@oneaccountants.nl'
+            ]);       
+        });
     }
 }

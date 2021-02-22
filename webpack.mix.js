@@ -36,6 +36,7 @@ mix.js("resources/js/app.js", "public/js")
 mix.browserSync({
     proxy: "https://doccie.test",
     https: true,
+    ghostMode: false,
     files: ["resources/lang/**/*.php", "resources/views/**/*.php"]
 });
 

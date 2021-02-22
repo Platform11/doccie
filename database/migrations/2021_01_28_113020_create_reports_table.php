@@ -15,15 +15,13 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->unsignedBigInteger('administration_id');
-            $table->unsignedBigInteger('author_id')->nullable();
+            $table->string('type');
             $table->json('data')->nullable();
+            $table->unsignedBigInteger('overview_id');
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('administration_id')->references('id')->on('administrations')->onDelete('cascade');
-            $table->foreign('author_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('overview_id')->references('id')->on('overviews')->onDelete('cascade');
         });
     }
 

@@ -27,9 +27,8 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required',
             'code' => 'required|numeric',
-            'call_posts_code' => 'numeric|required',
-            'creditors_code' => 'numeric',
-            'debtors_code' => 'numeric',
+            'call_posts_code' => 'required',
+            'reports_to_include_in_overview' => 'array',
             'contact_first_name' => 'required',
             'contact_last_name' => 'required',
             'contact_email' => 'required|email',

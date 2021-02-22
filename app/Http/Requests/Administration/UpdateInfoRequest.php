@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Administration;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\BelongsToAccount;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Administration;
 
@@ -36,9 +35,7 @@ class UpdateInfoRequest extends FormRequest
              'administration_id' => 'required|exists:administrations,id',
              'name' => 'required',
              'code' => 'required|numeric',
-             'call_posts_code' => 'numeric|required',
-             'creditors_code' => 'numeric',
-             'debtors_code' => 'numeric',
+             'call_posts_code' => 'required',
         ];
     }
 }

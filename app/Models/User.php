@@ -14,10 +14,11 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\ModelStatus\HasStatuses;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes, LogsActivity, HasRoles;
+    use HasFactory, Notifiable, SoftDeletes, LogsActivity, HasRoles, HasStatuses;
 
     /**
      * The attributes that are mass assignable.
@@ -32,10 +33,6 @@ class User extends Authenticatable
         'twinfield_username',
         'twinfield_password',
         'twinfield_office',
-    ];
-
-    protected $appends = [
-        'administration_count',
     ];
 
     /**
@@ -80,11 +77,6 @@ class User extends Authenticatable
     public function getTwinfieldOfficeCodeAttribute()
     {
         return $this->account()->first()->twinfield_office_code;
-    }
-
-    public function getAdministrationCountAttribute()
-    {
-        return $this->administrations()->count();
     }
 
     public function setTwinfieldPasswordAttribute($value)

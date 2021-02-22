@@ -3,12 +3,12 @@
 namespace App\Listeners;
 
 use Illuminate\Auth\Events\Lockout;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Browser;
 
-class LogLockoutAccount
+class LogLockout
 {
-    use LogsActivity;
     /**
      * Create the event listener.
      *
@@ -16,18 +16,20 @@ class LogLockoutAccount
      */
     public function __construct()
     {
-
+        //
     }
 
     /**
      * Handle the event.
-     * @param  Lockout $event
+     *
+     * @param  Lockout  $event
      * @return void
      */
     public function handle(Lockout $event)
-    {   
+    {
         activity()
-        ->withProperties(['username' => $event->request['email'], 'ip_address'=>$_SERVER['REMOTE_ADDR'], 'user_agent'=>Browser::platformName().', '.Browser::browserName()])
-        ->log('login-lockout');
+        ->causedBy($event->user)
+        ->withProperties(['username' => $event->credentials['email'], 'ip_address'=>$_SERVER['REMOTE_ADDR'], 'user_agent'=>Browser::platformName().', '.Browser::browserName()])
+        ->log('account-lockout');
     }
 }

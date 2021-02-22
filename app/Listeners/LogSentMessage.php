@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use Illuminate\Mail\Events\MessageSent;
 use App\Models\Notification;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Events\Overview\Sending\Finished as OverviewSendingFinished;
+use App\Events\Notification\Sent as NotificationSent;
 
 class LogSentMessage
 {
@@ -27,56 +27,40 @@ class LogSentMessage
      */
     public function handle(MessageSent $event)
     {
-        if(!empty($event->message->report))
-        {   
-            foreach($event->message->to as $recipient)
-            {
-                $this->createNotificationRecord(
-                    $event->message->report, 
-                    $event->message->author, 
-                    $recipient['address'], 
-                );
-            }
+        $recipients = array_merge(
+            $event->message->to, 
+            $event->message->cc, 
+            $event->message->bcc
+        );
 
-            foreach($event->message->cc as $recipient)
-            {
-                $this->createNotificationRecord(
-                    $event->message->report, 
-                    $event->message->author, 
-                    $recipient['address'], 
-                );
-            }
-
-            foreach($event->message->bcc as $recipient)
-            {
-                $this->createNotificationRecord(
-                    $event->message->report, 
-                    $event->message->author, 
-                    $recipient['address'], 
-                );
-            }
-
-            $event->message->administration->status = "sent";
-            $event->message->administration->save();
-            $this->deleteDirectories($event->message->directories);
+        foreach($recipients as $recipient)
+        {
+            $notification = $this->createNotificationRecord($event->message->overview, $recipient['address']); 
+            NotificationSent::dispatch($notification);
         }
+
+        $this->deleteReportFiles($event->message->overview);
+
+        OverviewSendingFinished::dispatch($event->message->overview);
     }
 
-    private function createNotificationRecord($subject, $sender, $recipient)
+    private function createNotificationRecord($overview, $recipient)
     {
         $notification = new Notification;
-        $notification->subject()->associate($subject);
-        $notification->sender()->associate($sender);
+        $notification->subject()->associate($overview);
+        $notification->sender()->associate($overview->author);
         $notification->channel = 'mail';
         $notification->recipient = $recipient;
         $notification->save();
+
+        return $notification;
     }
 
-    private function deleteDirectories($directories)
+    private function deleteReportFiles($overview)
     {
-        foreach($directories as $directory)
+        foreach($overview->reports as $report)
         {
-            Storage::deleteDirectory($directory);
+            $report->getMedia()[0]->delete();
         }
     }
 }

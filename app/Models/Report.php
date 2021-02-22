@@ -7,15 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Notification;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\ModelStatus\HasStatuses;
+use PhpTwinfield\BrowseColumn;
+use PhpTwinfield\Enums\BrowseColumnOperator;
 
-class Report extends Model
+
+class Report extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, SoftDeletes, LogsActivity, InteractsWithMedia, HasStatuses;
 
-    protected $appends = [
-        'sent_to',
-        'sent_status',
+    protected $casts = [
+        'status' => 'array',
+    ];
+
+    protected $fillable = [
+        'status',
+        'overview_id',
+        'type',
     ];
 
     public function getCreatedAtAttribute($value)
@@ -25,62 +35,107 @@ class Report extends Model
         return date('d-m-Y - H:i', $time_string);
     }
 
-    public function getSentToAttribute()
+    public function getConfigurationAttribute()
     {   
-        if(count($this->notifications) > 0)
-        {
-            return $this->notifications->first()->recipient;
+        return $this->configuration();
+    }
+
+    public function overview(): BelongsTo {
+        return $this->belongsTo('App\Models\Overview');
+    }
+
+    public function configuration()
+    {   
+        switch ($this->type) {
+            case 'call_posts':
+                return $this->call_posts_configuration();
+                break;
+            case 'debtors':
+                return $this->debtors_configuration();
+                break;
+            case 'creditors':
+                return $this->creditors_configuration();
+                break;
         }
-        return;
+    }
+
+    private function call_posts_configuration()
+    {
+        $configuration = [
+                            'columns' => [
+                                ['label'=>'Status', 'twinfield_column' => 'fin.trs.head.status', 'hide' => true],
+                                ['label'=>'Dagboek', 'twinfield_column' => 'fin.trs.head.code', 'align'=>'left'],
+                                ['label'=>'Boekdatum', 'twinfield_column' => 'fin.trs.head.date', 'align'=>'left'],
+                                ['label'=>'Omschrijving', 'twinfield_column' => 'fin.trs.line.description', 'align'=>'left'],
+                                ['label'=>'Bedrag', 'twinfield_column' => 'fin.trs.line.valuesigned', 'align'=>'right'],
+                                ['label'=>'Ontvangst/Betaling', 'twinfield_column' => '', 'align'=>'left'],
+                                ['label'=>'Factuurnummer', 'twinfield_column' => 'fin.trs.line.invnumber', 'align'=>'left'],        
+                            ],
+                            'browse_definition' => '030_3',
+                            'view' => 'pdf.call_posts',
+                        ];
         
-
-        // if(count($notifications) > 1)
-        // {   
-        //     return $notifications->first()->recipient. ' + '. (count($notifications) - 1);
-        // }
+        return $configuration;
     }
 
-    public function getSentStatusAttribute()
+    private function debtors_configuration()
+    {
+        $configuration = [
+                            'columns' => [
+                                ['label'=>'Status', 'twinfield_column' => 'fin.trs.line.matchstatus', 'hide' => true],
+                                ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2name', 'hide' => true],
+                                ['label'=>'Dagboek', 'twinfield_column' => 'fin.trs.head.code', 'align'=>'left'],
+                                ['label'=>'Datum', 'twinfield_column' => 'fin.trs.head.date', 'align'=>'left'],
+                                ['label'=>'Factuurnummer', 'twinfield_column' => 'fin.trs.line.invnumber', 'align'=>'left'],
+                                ['label'=>'Bedrag', 'twinfield_column' => 'fin.trs.line.valuesigned', 'align'=>'right'],
+                                ['label'=>'Openstaand', 'twinfield_column' => 'fin.trs.line.openbasevaluesigned', 'align'=>'right'],
+                            ],
+                            'group_by_column' => 0,
+                            'sum_column' => 5,
+                            'browse_definition' => '100',
+                            'view' => 'pdf.debtors',
+                        ];
+        
+        return $configuration;
+    }
+
+    private function creditors_configuration()
+    {
+        $configuration = [
+                            'columns' => [
+                                ['label'=>'Status', 'twinfield_column' => 'fin.trs.line.matchstatus', 'hide' => true],
+                                ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2name', 'hide' => true],
+                                ['label'=>'Dagboek', 'twinfield_column' => 'fin.trs.head.code', 'align'=>'left'],
+                                ['label'=>'Datum', 'twinfield_column' => 'fin.trs.head.date', 'align'=>'left'],
+                                ['label'=>'Factuurnummer', 'twinfield_column' => 'fin.trs.line.invnumber', 'align'=>'left'],
+                                ['label'=>'Bedrag', 'twinfield_column' => 'fin.trs.line.valuesigned', 'align'=>'right'],
+                                ['label'=>'Openstaand', 'twinfield_column' => 'fin.trs.line.openbasevaluesigned', 'align'=>'right'],
+                            ],
+                            'group_by_column' => 0,
+                            'sum_column' => 5,
+                            'browse_definition' => '200',
+                            'view' => 'pdf.creditors',
+                        ];
+        
+        return $configuration;
+    }
+
+    public function twinfield_columns()
     {   
-        $notifications = $this->notifications;
+        $configuration_columns = $this->configuration()['columns'];
+        $twinfield_columns = [];
 
-        $received_by = 0;
-        $bounced = 0;
-
-        foreach($notifications as $notification)
-        {
-            if($notification->delivery_status == 'bounced')
+        foreach($configuration_columns as $column)
+        {   
+            if($column['twinfield_column'] !== '')
             {
-                $bounced++;
-            }
-
-            if($notification->delivery_status == 'delivered')
-            {
-                $received_by++;
+                $twinfield_columns[] = (new BrowseColumn())
+                    ->setField($column['twinfield_column'])
+                    ->setLabel($column['label'])
+                    ->setVisible(true);
             }
         }
 
-        $status = 'in_transit';
-
-        if($received_by == count($notifications))
-        {
-            $status = 'delivered';
-        }
-
-        if($bounced > 0)
-        {
-            $status = 'failed';
-        }
-
-        return $status;
+        return $twinfield_columns;
     }
-
-    public function author(): BelongsTo {
-        return $this->belongsTo('App\Models\User');
-    }
-
-    public function notifications() {
-        return $this->morphMany(Notification::class, 'subject');
-    }
-
 }

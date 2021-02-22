@@ -17,7 +17,6 @@ class CreateInvitesTable extends Migration
             $table->id();
             $table->string('token', 24)->unique();
             $table->unsignedBigInteger('user_id')->unique();
-            $table->dateTime('accepted')->unique()->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

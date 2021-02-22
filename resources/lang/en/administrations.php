@@ -18,4 +18,5 @@ return [
     'contact_person_succesfully_updated' => 'Contactperson successfully updated',
     'info_succesfully_updated' => 'Information successfully updated',
     'created_successfully' => 'Administration successfully created',
+    'reports_to_include_succesfully_updated' => 'Default included reports succesfully updated',
 ];

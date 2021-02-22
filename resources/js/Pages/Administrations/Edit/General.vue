@@ -16,7 +16,7 @@
                     <div class="overflow-hidden shadow sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <div class="grid grid-cols-6 gap-6">
-                                <div class="col-span-6 sm:col-span-3">
+                                <div class="col-span-6 sm:col-span-6">
                                     <text-input
                                         v-model="form.name"
                                         label="Naam"
@@ -31,25 +31,11 @@
                                         :error="errors.code"
                                     ></text-input>
                                 </div>
-                                <div class="col-span-6 sm:col-span-2">
+                                <div class="col-span-6 sm:col-span-3">
                                     <text-input
                                         v-model="form.call_posts_code"
                                         :error="errors.call_posts_code"
-                                        label="Vraagposten rekening"
-                                    ></text-input>
-                                </div>
-                                <div class="col-span-6 sm:col-span-2">
-                                    <text-input
-                                        v-model="form.debtors_code"
-                                        :error="errors.debtors_code"
-                                        label="Debiteuren rekening"
-                                    ></text-input>
-                                </div>
-                                <div class="col-span-6 sm:col-span-2">
-                                    <text-input
-                                        v-model="form.creditors_code"
-                                        :error="errors.creditors_code"
-                                        label="Crediteuren rekening"
+                                        label="Grootboekrekening vraagposten"
                                     ></text-input>
                                 </div>
                             </div>
@@ -86,9 +72,7 @@ export default {
                 administration_id: this.administration.id,
                 name: this.administration.name,
                 code: this.administration.code,
-                call_posts_code: this.administration.call_posts_code,
-                creditors_code: this.administration.creditors_code,
-                debtors_code: this.administration.debtors_code
+                call_posts_code: this.administration.call_posts_code
             }
         };
     },

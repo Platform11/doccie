@@ -23,27 +23,29 @@ class UserSeeder extends Seeder
             'email' => 'esther@oneaccountants.nl', 
             'email_verified_at' => now(), 
             'password' => Hash::make('test1234'),
-            'status' => 'active',
             'twinfield_username' => 'nretel', 
             'twinfield_password' => '8.Jo9ihLKpXFiUdLy',
             'account_id' => 1,
         ]);
 
+        $user->setStatus('active');
+
         $account = Account::find(2);
         $account->admin_id = $user->id;
         $account->save();
 
-        User::create([
+        $user = User::create([
             'first_name' => 'Steven', 
             'last_name' => 'van Duijvenbode', 
             'email' => 'steven@oneaccountants.nl', 
             'email_verified_at' => now(), 
             'password' => Hash::make('test1234'),
-            'status' => 'active',
             'twinfield_username' => 'steven', 
             'twinfield_password' => 'teads',
             'account_id' => 1,
         ]);
+
+        $user->setStatus('active');
 
         $user = User::create([
             'first_name' => 'Johan', 
@@ -51,26 +53,28 @@ class UserSeeder extends Seeder
             'email' => 'johan@test.nl', 
             'email_verified_at' => now(), 
             'password' => Hash::make('test1234'),
-            'status' => 'active', 
             'twinfield_username' => 'jv', 
             'twinfield_password' => '1234',
             'account_id' => 2,
         ]);
 
+        $user->setStatus('active');
+
         $account = Account::find(2);
         $account->admin_id = $user->id;
         $account->save();
 
-        User::create([
+        $user = User::create([
             'first_name' => 'Suzanne', 
             'last_name' => 'Gauweling', 
             'email' => 'suzanne@test.nl', 
             'email_verified_at' => now(), 
             'password' => Hash::make('test1234'),
-            'status' => 'active',
             'twinfield_username' => 'sg', 
             'twinfield_password' => Crypt::encryptString('1234'),
             'account_id' => 2,
         ]);
+
+        $user->setStatus('active');
     }
 }

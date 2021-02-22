@@ -31,12 +31,14 @@
    
     <body style="width: 100%; margin:0; font-family:'Inter var';">
         <header style="margin-bottom: 24px;">
-           <img src="{{ $logo }}" class="logo" style="height: 32px;">
+           <img src="{{ $data->report->overview->administration->account->logo }}" class="logo" style="height: 32px;">
         </header>
         <main>
-            <h1 class="text-2xl" style="font-family:'Inter var';">{{ $doc_type }} {{ $administration_name }}</h1>
-            Datum: {{$date}}
-
+            <h1 class="text-2xl" style="font-family:'Inter var';">{{ 'Vraagposten ' . $data->report->overview->administration->name }}</h1>
+            
+            <div class="mt-4">
+                Datum: {{date('d-m-Y - H:i')}}
+            </div>
             <div class="mt-4">
                 <p>Graag verzoek ik u om de missende documenten voor de vraagposten te uploaden in Basecone.</p>
             </div>
@@ -45,23 +47,25 @@
                 <table cellspacing="0" cellpadding="1" width="100%" >
                     <thead style="text-align: left;">
                         <tr>
-                            @foreach($headings as $heading)
-                            <th>
-                                <div style="padding: 4px 8px;">
-                                    {{$heading['value']}}
-                                </div>
-                            </th>
+                            @foreach($data->report->configuration['columns'] as $column)
+                                @if(!array_key_exists('hide', $column))
+                                    <th>
+                                        <div style="padding: 4px 8px;">
+                                            {{$column['label']}}
+                                        </div>
+                                    </th>
+                                @endif
                             @endforeach
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($lines as $line)
+                        @foreach($data->rows as $row)
                         <tr>
-                            @foreach($line as $cell=>$index)
-                            <td valign="top" style="text-align: {{$headings[$cell]['align']}}; height: 1px; {{$headings[$cell]['value'] == 'Boekdatum' ? 'width: 120px;':''}}">
+                            @foreach($row as $index=>$cell)
+                            <td valign="top" style="text-align: {{$data->report->configuration['columns'][$index+1]['align']}}; height: 1px; {{$data->report->configuration['columns'][$index+1]['label'] == 'Boekdatum' ? 'width: 120px;':''}}">
                                 <div class="inline-block w-full h-full leading-none bg-gray-100">
                                     <div style="padding: 4px 8px">
-                                    {!! $line[$cell] === '' ? '&nbsp;' : $line[$cell] !!}
+                                    {!! $cell === '' ? '&nbsp;' : $cell !!}
                                     </div>
                                 </div>
                             </td>
@@ -73,7 +77,7 @@
             </div>
         </main>
         <footer style="text-align:right; margin-top:24px;">
-            Voor vragen kunt u contact opnemen met {{$contact['name']}} - <a class="font-medium" style="font-style:bold;" href="mailto:{{$contact['email']}}">{{$contact['email']}}</a> 
+            Voor vragen kunt u contact opnemen met {{$data->report->overview->author->first_name}} {{$data->report->overview->author->last_name}} - <a class="font-medium" style="font-style:bold;" href="mailto:{{$data->report->overview->author->email}}">{{$data->report->overview->author->email}}</a> 
         </footer>
     </body>
 </html>

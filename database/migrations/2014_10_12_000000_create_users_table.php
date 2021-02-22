@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('status');
             $table->string('twinfield_username')->nullable();
             $table->longText('twinfield_password')->nullable();
             $table->dateTime('last_login')->nullable();

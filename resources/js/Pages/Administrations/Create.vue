@@ -41,7 +41,7 @@
                                     <div class="px-4 py-5 bg-white sm:p-6">
                                         <div class="grid grid-cols-6 gap-6">
                                             <div
-                                                class="col-span-6 sm:col-span-3"
+                                                class="col-span-6 sm:col-span-6"
                                             >
                                                 <text-input
                                                     v-model="form.name"
@@ -60,7 +60,7 @@
                                                 ></text-input>
                                             </div>
                                             <div
-                                                class="col-span-6 sm:col-span-2"
+                                                class="col-span-6 sm:col-span-3"
                                             >
                                                 <text-input
                                                     v-model="
@@ -69,34 +69,90 @@
                                                     :error="
                                                         errors.call_posts_code
                                                     "
-                                                    label="Vraagposten rekening"
-                                                ></text-input>
-                                            </div>
-                                            <div
-                                                class="col-span-6 sm:col-span-2"
-                                            >
-                                                <text-input
-                                                    v-model="form.debtors_code"
-                                                    :error="errors.debtors_code"
-                                                    label="Debiteuren rekening"
-                                                ></text-input>
-                                            </div>
-                                            <div
-                                                class="col-span-6 sm:col-span-2"
-                                            >
-                                                <text-input
-                                                    v-model="
-                                                        form.creditors_code
-                                                    "
-                                                    :error="
-                                                        errors.creditors_code
-                                                    "
-                                                    label="Crediteuren rekening"
+                                                    label="Grootboekrekening vraagposten"
                                                 ></text-input>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="hidden sm:block" aria-hidden="true">
+                            <div class="py-8">
+                                <div class="border-t border-gray-200"></div>
+                            </div>
+                        </div>
+                        <div class="md:grid md:grid-cols-3 md:gap-6">
+                            <div class="md:col-span-1">
+                                <div class="px-4 sm:px-0">
+                                    <h3
+                                        class="text-lg font-medium leading-6 text-gray-900"
+                                    >
+                                        Rapporten
+                                    </h3>
+                                    <p class="mt-1 text-sm text-gray-600">
+                                        Hier kan aangegeven worden welke
+                                        rapporten standaard meegestuurd moeten
+                                        worden met ieder overzicht.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-5 md:mt-0 md:col-span-2">
+                                <form @submit.prevent="submit">
+                                    <div
+                                        class="overflow-hidden shadow sm:rounded-md"
+                                    >
+                                        <div class="px-4 py-5 bg-white sm:p-6">
+                                            <div class="grid grid-cols-6 gap-6">
+                                                <div
+                                                    class="col-span-6 sm:col-span-2"
+                                                >
+                                                    <input-checkbox
+                                                        label="Vraagpostenoverzicht"
+                                                        value="call_posts"
+                                                        :check-value="
+                                                            reports.call_posts
+                                                        "
+                                                        :error="errors.name"
+                                                        @change="
+                                                            reports.call_posts = !reports.call_posts
+                                                        "
+                                                    ></input-checkbox>
+                                                </div>
+                                                <div
+                                                    class="col-span-6 sm:col-span-2"
+                                                >
+                                                    <input-checkbox
+                                                        label="Debiteurenoverzicht"
+                                                        value="debtors"
+                                                        :check-value="
+                                                            reports.debtors
+                                                        "
+                                                        :error="errors.name"
+                                                        @change="
+                                                            reports.debtors = !reports.debtors
+                                                        "
+                                                    ></input-checkbox>
+                                                </div>
+                                                <div
+                                                    class="col-span-6 sm:col-span-2"
+                                                >
+                                                    <input-checkbox
+                                                        label="Crediteurenoverzicht"
+                                                        value="creditors"
+                                                        :check-value="
+                                                            reports.creditors
+                                                        "
+                                                        :error="errors.name"
+                                                        @change="
+                                                            reports.creditors = !reports.creditors
+                                                        "
+                                                    ></input-checkbox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <div class="hidden sm:block" aria-hidden="true">
@@ -244,8 +300,8 @@
 import Layout from "@/Shared/Layout";
 import TextInput from "@/Elements/TextInput";
 import LoadingButton from "@/Elements/LoadingButton.vue";
-import TableReports from "@/Components/Tables/Reports";
 import SelectInput from "@/Elements/SelectInput";
+import InputCheckbox from "@/Elements/InputCheckbox";
 
 export default {
     // metaInfo: { title: this.user.name },
@@ -253,7 +309,8 @@ export default {
         Layout,
         TextInput,
         LoadingButton,
-        SelectInput
+        SelectInput,
+        InputCheckbox
     },
     props: {
         colleagues: Array,
@@ -261,12 +318,16 @@ export default {
     },
     data() {
         return {
+            reports: {
+                call_posts: true,
+                debtors: false,
+                creditors: true
+            },
             form: {
                 name: "",
                 code: "",
                 call_posts_code: 2999,
-                creditors_code: 1600,
-                debtors_code: 1600,
+                reports_to_include_in_overview: [],
                 contact_first_name: "",
                 contact_last_name: "",
                 contact_email: "",
@@ -281,8 +342,27 @@ export default {
     },
 
     methods: {
+        calculateEnabledReports() {
+            let reports = [];
+
+            if (this.reports.call_posts) {
+                reports.push("call_posts");
+            }
+
+            if (this.reports.debtors) {
+                reports.push("debtors");
+            }
+
+            if (this.reports.creditors) {
+                reports.push("creditors");
+            }
+
+            this.form.reports_to_include_in_overview = reports;
+        },
+
         submit() {
             this.submitting = true;
+            this.calculateEnabledReports();
             this.$inertia.post(this.route("administrations.store"), this.form, {
                 onFinish: () => {
                     this.submitting = false;

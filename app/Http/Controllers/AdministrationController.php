@@ -5,20 +5,23 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Administration;
-use App\Jobs\GenerateReports;
+use App\Models\Overview;
+use App\Jobs\ProcessOverview;
 use App\Http\Requests\Administration\StoreRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\Administration\UpdateRelationManagerRequest;
 use App\Http\Requests\Administration\UpdateContactPersonRequest;
 use App\Http\Requests\Administration\UpdateInfoRequest;
+use App\Http\Requests\Administration\UpdateReportsToIncludeRequest;
 use App\Http\Requests\Administration\ShowRequest;
+use Illuminate\Support\Facades\Cache;
 
 class AdministrationController extends Controller
 {
     public function __invoke(): \Inertia\Response
     {
-        return Inertia::render('Administrations/Index', ['administrations' => Auth::user()->account->administrations()->with(['relation_manager'])->get()]);
+        return Inertia::render('Administrations/Index', ['administrations' => Auth::user()->account->administrations()->withLastStatus()->with(['relation_manager'])->get()]);
     }
 
     public function create(): \Inertia\Response
@@ -36,9 +39,10 @@ class AdministrationController extends Controller
         $validated['status'] = 'created';
         $validated['last_action_initiator_id'] = Auth::user()->id;
 
-        Administration::create($validated);
+        $administration = Administration::create($validated);
+        $administration->setStatus('new', 'Deze administratie bevat nog geen overzichten');
 
-        return Redirect::route('administrations.index')->with('success', __('adminsitrations.created_successfully'));
+        return Redirect::route('administrations.index')->with('success', __('administrations.created_successfully'));
     }
 
     public function delete(Administration $administration): RedirectResponse
@@ -50,24 +54,46 @@ class AdministrationController extends Controller
     public function show(ShowRequest $request, Administration $administration): \Inertia\Response
     {
         return Inertia::render('Administrations/Show', [
-            'administration' => $administration->load(['relation_manager', 'reports.author', 'reports.notifications']),
+            'administration' => $administration->load(['relation_manager']),
+            'overviews' => $administration->overviews()->with(['author', 'last_status', 'notifications.last_status'])->limit(20)->get(),
             'colleagues' => Auth::user()->colleagues()->get()
         ]);
     }
 
-    public function sendReport(Administration $administration)
-    {
-        $administration->status = 'queued';
-        $administration->save();
+    public function sendOverview(Administration $administration)
+    {   
+        $lock = Cache::lock($administration->account->id.'sendOverview'.$administration->id, 5);
 
-        GenerateReports::dispatch(Administration::find($administration->id), Auth::user());
+        if ($lock->get()) {
 
-        return response()->json($administration);
-    }
+            $administration->setStatus('preparing_new_overview', 'Overzicht voorbereiden::Er wordt een nieuw overzicht voorbereid om opgesteld te worden');
 
-    public function getInfo(Administration $administration)
-    {
-        return response()->json($administration);
+            $overview = Overview::create([
+                'administration_id' => $administration->id,
+                'author_id' => Auth::user()->id,
+            ]);
+
+            $overview->setStatus('preparing', 'Overzicht voorbereiden::Overzicht wordt voorbereid om samengesteld te worden.');
+
+            foreach($administration->reports_to_include_in_overview as $report_type)
+            {
+                $report = $overview->reports()->create([
+                    'overview_id' => $overview->id,
+                    'type' => $report_type,
+                ]);
+
+                $report->setStatus('preparing', 'Rapport voorbereiden::Rapport wordt voorbereid om te worden opgesteld.');
+            }
+
+            ProcessOverview::dispatch($overview);
+
+            $overview->setStatus('preparing', 'Verzoek ingediend::Verzoek om rapport te genereren ingediend en zal automatisch in de wachtrij worden gezet.');
+
+            $lock->release();
+
+            return;
+        }
+        return;
     }
 
     public function updateInfo(UpdateInfoRequest $request)
@@ -76,11 +102,18 @@ class AdministrationController extends Controller
         $administration->name = $request->validated()['name'];
         $administration->code = $request->validated()['code'];
         $administration->call_posts_code = $request->validated()['call_posts_code'];
-        $administration->creditors_code = $request->validated()['creditors_code'];
-        $administration->debtors_code = $request->validated()['debtors_code'];
         $administration->save();
 
         return Redirect::route('administrations.show', ['administration' => $administration->id])->with('success', __('administrations.info_succesfully_updated'));
+    }
+
+    public function updateReportsToInclude(UpdateReportsToIncludeRequest $request)
+    {
+        $administration = Administration::find($request->validated()['administration_id']);
+        $administration->reports_to_include_in_overview = $request->validated()['reports_to_include_in_overview'];
+        $administration->save();
+
+        return Redirect::route('administrations.show', ['administration' => $administration->id])->with('success', __('administrations.reports_to_include_succesfully_updated'));
     }
 
     public function updateContactPerson(UpdateContactPersonRequest $request)

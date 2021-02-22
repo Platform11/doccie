@@ -63,7 +63,11 @@
         }
 
     </script>
-
+        <script>
+            window.PUSHER_APP_KEY = '{{ config('broadcasting.connections.pusher.key') }}';
+            window.APP_DOMAIN = '{{ env('APP_DOMAIN') }}';
+            window.APP_TLD = '{{ env('APP_TLD') }}';
+        </script>
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
     <body class="h-full font-sans text-sm bg-gray-100" style="-webkit-tap-highlight-color: transparent;">

@@ -56,9 +56,10 @@ Route::group(['prefix' => 'administrations', 'middleware'=> ['auth']], function(
   Route::post('update/relation_manager')->name('administrations.update.relation_manager')->uses([AdministrationController::class, 'updateRelationManager']);
   Route::post('update/contact_person')->name('administrations.update.contact_person')->uses([AdministrationController::class, 'updateContactPerson']);
   Route::post('update/info')->name('administrations.update.info')->uses([AdministrationController::class, 'updateInfo']);
+  Route::post('update/reports_to_include')->name('administrations.update.reports_to_include')->uses([AdministrationController::class, 'updateReportsToInclude']);
   Route::get('{administration}')->name('administrations.show')->uses([AdministrationController::class, 'show']);
-  Route::get('send-report/{administration}')->name('administrations.send-report')->uses([AdministrationController::class, 'sendReport']);
-  Route::get('info/{administration}')->name('administrations.info')->uses([AdministrationController::class, 'getInfo']);
+  Route::get('send-overview/{administration}')->name('administrations.send-overview')->uses([AdministrationController::class, 'sendOverview']);
+  Route::get('/info/ds')->name('administrations.info')->uses([AdministrationController::class, 'getInfo']);
 });
 
 Route::group(['prefix' => 'settings', 'middleware'=> ['auth']], function() {

@@ -18,4 +18,5 @@ return [
     'contact_person_succesfully_updated' => 'Contactpersoon succesvol gewijzigd',
     'info_succesfully_updated' => 'Informatie succesvol gewijzigd',
     'created_successfully' => 'Administratie succesvol toegevoegd',
+    'reports_to_include_succesfully_updated' => 'Standaard meegestuurde rapporten succesvol gewijzigd',
 ];

@@ -41,24 +41,13 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'auth' => function () use ($request) {
-
-                // $permissions_formatted = [];
-                // if($request->user())
-                // {                
-                //     $permissions = $request->user()->getPermissionsViaRoles();
-                    
-                //     foreach($permissions as $permission)
-                //     {
-                //         $permissions_formatted[] = $permission->name;
-                //     }
-                // }
-
                 return [
                     'user' => $request->user() ? [
                         'id' => $request->user()->id,
                         'first_name' => $request->user()->first_name,
                         'last_name' => $request->user()->last_name,
                         'email' => $request->user()->email,
+                        'account_id' => $request->user()->account->id,
                         // 'permissions' => $permissions_formatted,
                         // 'is_admin' => $request->user()->hasRole('super admin'),
                     ] : null,
