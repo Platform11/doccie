@@ -28,5 +28,6 @@ return [
     'overview_sending' => 'Sending',
     'overview_sent' => 'Sent',
     'overview_failed' => 'Failed',
-    'preparing_new_overview'=> 'Preparing'
+    'preparing_new_overview'=> 'Preparing',
+    'active'=> 'Active'
 ];

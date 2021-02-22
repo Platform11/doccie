@@ -91,7 +91,7 @@ class AdministrationController extends Controller
 
             $lock->release();
 
-            return;
+            return $administration->load(['last_status','relation_manager']);
         }
         return;
     }

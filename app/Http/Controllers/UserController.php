@@ -20,7 +20,7 @@ class UserController extends Controller
     public function __invoke(): \Inertia\Response
     {
         $account_id = Auth::user()->account->id;
-        $users = User::where('account_id', $account_id)->get();
+        $users = User::where('account_id', $account_id)->with(['administrations', 'last_status'])->get();
 
         return Inertia::render('Users/Index', ['users' => $users]);
     }
@@ -29,7 +29,7 @@ class UserController extends Controller
     {   
         return Inertia::render('Users/Show', [
             'user' => $user->makeVisible(['twinfield_username', 'twinfield_office']),
-            'administrations' => $user->administrations()->with('relation_manager')->get(),
+            'administrations' => $user->administrations->load(['last_status', 'relation_manager']),
         ]);
     }
 

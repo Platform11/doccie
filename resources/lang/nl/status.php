@@ -28,5 +28,6 @@ return [
     'overview_sending' => 'Verzenden',
     'overview_sent' => 'Verzonden',
     'overview_failed' => 'Mislukt',
-    'preparing_new_overview'=> 'Voorbereiden'
+    'preparing_new_overview'=> 'Voorbereiden',
+    'active'=> 'Actief',
 ];

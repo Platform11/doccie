@@ -99,4 +99,9 @@ class User extends Authenticatable
     public function invite(): HasOne {
         return $this->hasOne('App\Models\Invite');
     }
+
+    public function last_status()
+    {
+        return $this->morphOne('Spatie\ModelStatus\Status', 'model')->orderByDesc('id');
+    }
 }

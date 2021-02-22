@@ -69,7 +69,7 @@ export default {
             }
         },
 
-        sendOverview(data) {
+        sendOverview(data, index) {
             this.tableKey++;
 
             axios({
@@ -78,6 +78,7 @@ export default {
                     administration: data.administration_id
                 })
             }).then(response => {
+                this.administrations[index] = response.data;
                 this.submitting = false;
                 this.tableKey++;
             });

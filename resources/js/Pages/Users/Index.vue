@@ -63,20 +63,23 @@
                                     </inertia-link>
                                 </td>
                                 <td>
-                                    {{ user.administration_count }}
+                                    {{ user.administrations.length }}
                                 </td>
                                 <td>
                                     <div
-                                        v-if="user.status == 'active'"
-                                        class="inline-block px-2 py-1 text-xs font-semibold text-green-900 bg-green-200 rounded-full cursor-pointer px-"
+                                        class="inline-block px-2 py-1 text-xs font-semibold rounded-full cursor-pointer px-"
+                                        :class="
+                                            user.last_status.name == 'active'
+                                                ? 'text-green-900 bg-green-200'
+                                                : 'text-purple-900 bg-purple-200'
+                                        "
                                     >
-                                        Actief
-                                    </div>
-                                    <div
-                                        v-if="user.status == 'invited'"
-                                        class="inline-block px-2 py-1 text-xs font-semibold text-purple-900 bg-purple-200 rounded-full cursor-pointer"
-                                    >
-                                        Uitgenodigd
+                                        {{
+                                            trans.get(
+                                                "status." +
+                                                    user.last_status.name
+                                            )
+                                        }}
                                     </div>
                                 </td>
                                 <td>
