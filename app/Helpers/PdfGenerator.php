@@ -8,7 +8,6 @@ class PdfGenerator
 {
     public static function generate($data)
     {
-        logger($data->report->type);
         Browsershot::html(view($data->report->configuration['view'], ['data' => $data])->render())
         ->addChromiumArguments([
             'font-render-hinting' => 'none',
