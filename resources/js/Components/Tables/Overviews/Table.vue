@@ -64,10 +64,6 @@ export default {
         }
     },
 
-    created() {
-        console.log(this.overviews);
-    },
-
     methods: {
         statusClasses(status) {
             if (status === "queued") {
