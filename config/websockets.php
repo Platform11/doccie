@@ -23,11 +23,10 @@ return [
      */
     'apps' => [
         [
-            'id' => env('PUSHER_APP_ID'),
+            'id' => 1155572,
             'name' => env('APP_NAME'),
-            'key' => env('PUSHER_APP_KEY'),
-            'secret' => env('PUSHER_APP_SECRET'),
-            'path' => env('PUSHER_APP_PATH'),
+            'key' => 'a8aa3f4f89cd6815bxza',
+            'secret' => 'd6d208acf5549b8736bc',
             'capacity' => null,
             'enable_client_messages' => false,
             'enable_statistics' => true,
@@ -47,11 +46,7 @@ return [
      * This array contains the hosts of which you want to allow incoming requests.
      * Leave this empty if you want to accept requests from all hosts.
      */
-    'allowed_origins' => [
-        'localhost',
-        'doccie.test',
-        'doccie.app',
-    ],
+    'allowed_origins' => [],
 
     /*
      * The maximum request size in kilobytes that is allowed for an incoming WebSocket request.
