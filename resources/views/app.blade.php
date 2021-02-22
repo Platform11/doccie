@@ -65,8 +65,8 @@
     </script>
         <script>
             window.PUSHER_APP_KEY = '{{ config('broadcasting.connections.pusher.key') }}';
-            window.APP_DOMAIN = '{{ env('APP_DOMAIN') }}';
-            window.APP_TLD = '{{ env('APP_TLD') }}';
+            window.APP_DOMAIN = '{{ config('app.domain') }}';
+            window.APP_TLD = '{{ config('app.tld') }}';
         </script>
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
