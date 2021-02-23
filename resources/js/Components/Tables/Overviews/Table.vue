@@ -14,7 +14,7 @@
                     Aangemaakt op
                 </th>
                 <th class="font-medium tracking-wider">
-                    Vertstuurd op
+                    Verstuurd op
                 </th>
                 <th class="font-medium tracking-wider">
                     Door
