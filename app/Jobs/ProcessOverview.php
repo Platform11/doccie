@@ -16,7 +16,7 @@ class ProcessOverview implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 120;
+    public $timeout = 600;
 
     /**
      * @var \App\Models\Overview
