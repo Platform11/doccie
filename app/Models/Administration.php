@@ -100,7 +100,7 @@ class Administration extends Model
         $query->addSelect(['last_status_id' => Status::select('id')
             ->whereColumn('model_id', 'administrations.id')
             ->where('model_type', 'App\Models\Administration')
-            ->latest()
+            ->orderByDesc('id')
             ->take(1)
         ])->with('lastStatus');
     }
