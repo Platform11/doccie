@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Cache;
 class AdministrationController extends Controller
 {
     public function __invoke(): \Inertia\Response
-    {
+    {   
         return Inertia::render('Administrations/Index', ['administrations' => Auth::user()->account->administrations()->withLastStatus()->with(['relation_manager'])->get()]);
     }
 
@@ -66,7 +66,7 @@ class AdministrationController extends Controller
 
         if ($lock->get()) {
 
-            $administration->setStatus('preparing_new_overview', 'Overzicht voorbereiden::Er wordt een nieuw overzicht voorbereid om opgesteld te worden');
+            $administration->setStatus('preparing_new_overview', 'Overzicht voorbereiden::Er wordt een nieuw overzicht voorbereid om opgesteld te worden.');
 
             $overview = Overview::create([
                 'administration_id' => $administration->id,

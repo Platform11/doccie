@@ -37,6 +37,7 @@
         "spatie/laravel-medialibrary-pro": "^1.12",
         "spatie/laravel-model-status": "^1.10",
         "spatie/laravel-permission": "^3.17",
+        "spatie/laravel-ray": "^1.13",
         "tightenco/ziggy": "^0.9.4"
     },
     "require-dev": {

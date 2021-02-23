@@ -50,7 +50,6 @@ class SendOverviewNotification extends Notification implements ShouldQueue
     public function toMail($notifiable): OverviewMailable
     {   
         OverviewSendingStarted::dispatch($this->overview);
-        sleep(2);
         return (new OverviewMailable($this->overview))
         ->to($this->overview->administration->contact_email)
         ->cc($notifiable->email);

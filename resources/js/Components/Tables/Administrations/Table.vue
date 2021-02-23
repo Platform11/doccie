@@ -123,7 +123,6 @@ export default {
                 console.log("already submitting");
                 return;
             }
-            console.log("Sending request to compose new overview!");
             administration.submitting = true;
             this.$emit("sendOverview", {
                 administration_id: administration.id,
