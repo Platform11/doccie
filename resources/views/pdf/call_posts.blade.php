@@ -64,7 +64,7 @@
                         @foreach($data->rows as $row)
                         <tr>
                             @foreach($row as $index=>$cell)
-                            <td valign="top" style="text-align: {{$visible_columns[$index]['align']}}; height: 1px; {{$visible_columns[$index]['label'] == 'Boekdatum' ? 'width: 120px;':''}}">
+                            <td valign="top" style="text-align: {{$visible_columns[$index]['align']}}; height: 1px; {{$visible_columns[$index]['label'] == 'Boekdatum' ? 'width: 130px;':''}}">
                                 <div class="inline-block w-full h-full leading-none bg-gray-100">
                                     <div style="padding: 4px 8px">
                                     {!! $cell === '' ? '&nbsp;' : $cell !!}

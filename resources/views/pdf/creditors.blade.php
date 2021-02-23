@@ -87,7 +87,7 @@
                                 }
                                 if($label == 'Datum')
                                 {
-                                    $width = '120px';
+                                    $width = '130px';
                                 }
                                 if($label == 'Bedrag')
                                 {
