@@ -65,6 +65,7 @@
     </script>
         <script>
             window.PUSHER_APP_KEY = '{{ config('broadcasting.connections.pusher.key') }}';
+            window.APP_DEBUG = {{ config('app.debug') ? 'true' : 'false' }};
             window.APP_DOMAIN = '{{ config('app.domain') }}';
             window.APP_TLD = '{{ config('app.tld') }}';
         </script>

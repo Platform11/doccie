@@ -25,8 +25,8 @@ window.Echo = new Echo({
     key: window.PUSHER_APP_KEY,
     cluster: "eu",
     wsHost: window.APP_DOMAIN + window.APP_TLD,
-    wsPort: 6002,
-    wssPort: 6002,
+    wsPort: window.APP_DEBUG ? 6002 : 443,
+    wssPort: window.APP_DEBUG ? 6002 : 443,
     encrypted: true,
     disableStats: true,
     enabledTransports: ["ws", "wss"]
