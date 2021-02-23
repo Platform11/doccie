@@ -63,12 +63,12 @@ class Administration extends Model
     }
 
     public function overviews(): HasMany {
-        return $this->hasMany('App\Models\Overview')->latest();
+        return $this->hasMany('App\Models\Overview')->orderByDesc('id');
     }
 
     public function last_overview()
     {
-        return $this->hasOne('App\Models\Overview')->latest();
+        return $this->hasOne('App\Models\Overview')->orderByDesc('id');
     }
 
     public function lastOverview()
