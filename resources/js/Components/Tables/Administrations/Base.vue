@@ -70,14 +70,6 @@ export default {
         },
 
         sendOverview(data) {
-            this.administrations[data.index].last_overview_sent_at = null;
-            this.administrations[data.index].last_status.name =
-                "preparing_new_overview";
-            this.administrations[data.index].last_status.reason =
-                "Overzicht voorbereiden::Er wordt een nieuw overzicht voorbereid om opgesteld te worden.";
-            this.tableKey++;
-            console.log(this.tableKey);
-            console.log(this.administrations[data.index]);
             axios({
                 method: "get",
                 url: this.route("administrations.send-overview", {
