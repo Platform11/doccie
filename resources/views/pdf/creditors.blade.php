@@ -40,7 +40,10 @@
                 Datum: {{date('d-m-Y - H:i')}}<br>
                 Totaal openstaand:  {{$data->total}}
             </div>
-            @php $i = 0; @endphp
+            @php 
+                $i = 0;
+                $visible_columns = $data->report->visible_columns();
+            @endphp
             @foreach($data->rows as $index_creditor=>$creditor)
             <div style="margin-top: 14px;">
                 
@@ -48,16 +51,12 @@
                     @if($i == 0)
                         <thead style="text-align: left;">
                             <tr>
-                                @foreach($data->report->configuration['columns'] as $index => $column)
-                                    @if($index !== $data->report->configuration['group_by_column'])
-                                        @if(!array_key_exists('hide', $column))
-                                            <th style="text-align: {{$data->report->configuration['columns'][$index]['align']}};">
-                                                <div style="padding: 4px 8px 8px;">
-                                                    {{$data->report->configuration['columns'][$index]['label']}}
-                                                </div>
-                                            </th>
-                                        @endif
-                                    @endif
+                                @foreach($visible_columns as $column)
+                                    <th style="text-align: {{$column['align']}};">
+                                        <div style="padding: 4px 8px 8px;">
+                                            {{$column['label']}}
+                                        </div>
+                                    </th>
                                 @endforeach
                             </tr>
                         </thead>
@@ -67,7 +66,7 @@
                             <td colspan="{{count($creditor['rows'][0])}}">
                                 <div class="flex justify-between w-full h-full leading-none bg-gray-100">
                                     <div style="padding: 4px 8px">
-                                        <h3>{{$index_creditor}}</h3>
+                                        <h3>{{$creditor['name']}}</h3>
                                     </div>
                                     <div style="padding: 4px 8px">
                                         <h3>Totaal: {{$creditor['total']}}</h3>
@@ -80,7 +79,7 @@
                             @foreach($line as $index=>$cell)
 
                             @php
-                                $label = $data->report->configuration['columns'][$index+2]['label'];
+                                $label = $visible_columns[$index]['label'];
                                 $width = '';
                                 if($label == 'Dagboek')
                                 {
@@ -100,7 +99,7 @@
                                 }
                             @endphp
     
-                            <td valign="top" style="text-align: {{$data->report->configuration['columns'][$index+2]['align']}}; height: 1px; {{!empty($width) ? 'width: '.$width.';':''}}">
+                            <td valign="top" style="text-align: {{$visible_columns[$index]['align']}}; height: 1px; {{!empty($width) ? 'width: '.$width.';':''}}">
                                 <div class="inline-block w-full h-full leading-none bg-gray-100">
                                     <div style="padding: 4px 8px">
                                     {!! $cell === '' ? '&nbsp;' : $cell !!}

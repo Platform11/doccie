@@ -59,6 +59,21 @@ class Report extends Model implements HasMedia
         }
     }
 
+    public function visible_columns()
+    {
+        $columns = [];
+
+        foreach($this->configuration['columns'] as $column)
+        {
+            if(!array_key_exists('hide', $column))
+            {
+                $columns[] = $column;
+            }
+        }
+
+        return $columns;
+    }
+
     private function call_posts_configuration()
     {
         $configuration = [
@@ -83,6 +98,7 @@ class Report extends Model implements HasMedia
         $configuration = [
                             'columns' => [
                                 ['label'=>'Status', 'twinfield_column' => 'fin.trs.line.matchstatus', 'hide' => true],
+                                ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2', 'hide' => true],
                                 ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2name', 'hide' => true],
                                 ['label'=>'Dagboek', 'twinfield_column' => 'fin.trs.head.code', 'align'=>'left'],
                                 ['label'=>'Datum', 'twinfield_column' => 'fin.trs.head.date', 'align'=>'left'],
@@ -104,6 +120,7 @@ class Report extends Model implements HasMedia
         $configuration = [
                             'columns' => [
                                 ['label'=>'Status', 'twinfield_column' => 'fin.trs.line.matchstatus', 'hide' => true],
+                                ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2', 'hide' => true],
                                 ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2name', 'hide' => true],
                                 ['label'=>'Dagboek', 'twinfield_column' => 'fin.trs.head.code', 'align'=>'left'],
                                 ['label'=>'Datum', 'twinfield_column' => 'fin.trs.head.date', 'align'=>'left'],

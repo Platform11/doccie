@@ -80,7 +80,7 @@ class OverviewMailable extends Mailable
             {
                 $file_name = 'Crediteurenoverzicht';
             }
-            $file_name = $file_name .' '. $report->overview->administration->name . ' - '.date('d-m-Y');
+            $file_name = $file_name .' '. $report->overview->administration->name . ' - '.date('d-m-Y').'.pdf';
 
             $mail->attach($report->getMedia()->first()->getPath(), [
                 'as' => $file_name,

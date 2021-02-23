@@ -42,19 +42,21 @@
             <div class="mt-4">
                 <p>Graag verzoek ik u om de missende documenten voor de vraagposten te uploaden in Basecone.</p>
             </div>
+            
+            @php
+               $visible_columns = $data->report->visible_columns();
+            @endphp
 
             <div style="margin-top: 12px;">
                 <table cellspacing="0" cellpadding="1" width="100%" >
                     <thead style="text-align: left;">
                         <tr>
-                            @foreach($data->report->configuration['columns'] as $column)
-                                @if(!array_key_exists('hide', $column))
-                                    <th>
-                                        <div style="padding: 4px 8px;">
-                                            {{$column['label']}}
-                                        </div>
-                                    </th>
-                                @endif
+                            @foreach($visible_columns as $column)
+                                <th>
+                                    <div style="padding: 4px 8px;">
+                                        {{$column['label']}}
+                                    </div>
+                                </th>
                             @endforeach
                         </tr>
                     </thead>
@@ -62,7 +64,7 @@
                         @foreach($data->rows as $row)
                         <tr>
                             @foreach($row as $index=>$cell)
-                            <td valign="top" style="text-align: {{$data->report->configuration['columns'][$index+1]['align']}}; height: 1px; {{$data->report->configuration['columns'][$index+1]['label'] == 'Boekdatum' ? 'width: 120px;':''}}">
+                            <td valign="top" style="text-align: {{$visible_columns[$index]['align']}}; height: 1px; {{$visible_columns[$index]['label'] == 'Boekdatum' ? 'width: 120px;':''}}">
                                 <div class="inline-block w-full h-full leading-none bg-gray-100">
                                     <div style="padding: 4px 8px">
                                     {!! $cell === '' ? '&nbsp;' : $cell !!}

@@ -45,8 +45,8 @@ class ReportComposer
         }
 
         //Set path where the PDF should be stored (temporarily, gets deleted once it has been sent succesfully - see:  App\Listeners\LogSentMessage)
-        $this->path = storage_path() . '/app/reports/' . $this->report->id . ' - ' .strtotime('now').'.pdf';
-        
+        $this->path = storage_path() . '/app/reports/' . $this->report->id . strtotime('now').'.pdf';
+
         PdfGenerator::generate($this);
         $this->report->addMedia($this->path)->toMediaCollection();
 
@@ -96,14 +96,24 @@ class ReportComposer
             }
           }
           
-          //remove final and matched rows
+          //remove status strin from text
           if($extracted_browse_data_values_row[0] != 'final' && $extracted_browse_data_values_row[0] != 'matched')
           {
-            array_shift($extracted_browse_data_values_row);
-            $extracted_browse_data_values_rows[] = $extracted_browse_data_values_row;
+              if($this->report->type == 'debtors' || $this->report->type == 'creditors')
+              {
+                if((int)$extracted_browse_data_values_row[count($extracted_browse_data_values_row) - 1] !== 0)
+                {
+                  array_shift($extracted_browse_data_values_row);
+                  $extracted_browse_data_values_rows[] = $extracted_browse_data_values_row;
+                }
+              }
+              else {
+                array_shift($extracted_browse_data_values_row);
+                $extracted_browse_data_values_rows[] = $extracted_browse_data_values_row;
+              }          
           }
-
         }
+        
         return $extracted_browse_data_values_rows;
     }
 
@@ -129,12 +139,21 @@ class ReportComposer
             $group_identifier = $row[$group_by_column];
 
             if(!array_key_exists($group_identifier, $groups))
-            {
+            {   
+                $groups[$group_identifier]['name'] = $row[1];
                 $groups[$group_identifier]['rows'] = [];
             }
-              array_shift($row);
-              $groups[$group_identifier]['rows'][] = $row;
+
+            //remove relation_id
+            array_shift($row);
+            //remove relation name
+            array_shift($row);
+
+            $groups[$group_identifier]['rows'][] = $row;
         }
+
+        //sort groups by key (relation id)
+        ksort($groups);
 
         $this->rows = $groups;
     }
@@ -160,6 +179,7 @@ class ReportComposer
           $fmt = new \NumberFormatter( 'nl_NL', \NumberFormatter::CURRENCY );
           $total += $fmt->parseCurrency($row['total'], $curr);
         }
+
         $this->total = NumberFormatter::format($total);
     }
 
@@ -212,20 +232,25 @@ class ReportComposer
         return 'Bankmutatie';
       }
 
-      if($value == 'INK')
+      if($value === 'INK')
       {
         return 'Inkoopfactuur';
       }
 
-      if($value == 'MEMO')
+      if($value === 'MEMO')
       {
         return 'Memoriaalboeking';
       }
 
-      if($value == 'VRK')
+      if($value === 'VRK')
       {
         return 'Verkoopfactuur';
-      } 
+      }
+
+      if(strpos($value, 'JAAREIND') !== false)
+      {
+        return 'Eindbalans';
+      }
 
       return $value;
     }
