@@ -148,30 +148,22 @@ class Report extends Model implements HasMedia
             {
                 if($column['label'] == 'Status')
                 {
-                    if($this->report == 'debtors')
+                    if($this->type == 'debtors' || $this->type == 'creditors')
                     {
+                        logger($column['twinfield_column']);
                         $twinfield_columns[] = (new BrowseColumn())
                             ->setField($column['twinfield_column'])
                             ->setLabel($column['label'])
-                            ->setOperator(\PhpTwinfield\Enums\BrowseColumnOperator::EQUAL())
-                            ->setFrom('temporary')
-                            ->setTo('temporary')
-                            ->setVisible(true);                                            
-                    }
-                    else if($this->report == 'creditors') {
-                        $twinfield_columns[] = (new BrowseColumn())
-                            ->setField($column['twinfield_column'])
-                            ->setLabel($column['label'])
-                            ->setOperator(\PhpTwinfield\Enums\BrowseColumnOperator::EQUAL())
+                            ->setOperator(BrowseColumnOperator::EQUAL())
                             ->setFrom('available')
                             ->setTo('available')
-                            ->setVisible(true);
+                            ->setVisible(true);                                            
                     }
                     else {
                         $twinfield_columns[] = (new BrowseColumn())
                             ->setField($column['twinfield_column'])
                             ->setLabel($column['label'])
-                            ->setOperator(\PhpTwinfield\Enums\BrowseColumnOperator::EQUAL())
+                            ->setOperator(BrowseColumnOperator::EQUAL())
                             ->setFrom('temporary')
                             ->setTo('temporary')
                             ->setVisible(true);
