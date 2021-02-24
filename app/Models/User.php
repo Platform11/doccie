@@ -15,10 +15,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\ModelStatus\HasStatuses;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes, LogsActivity, HasRoles, HasStatuses;
+    use HasFactory, Notifiable, SoftDeletes, LogsActivity, HasRoles, HasStatuses, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
