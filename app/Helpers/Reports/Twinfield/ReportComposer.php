@@ -232,6 +232,11 @@ class ReportComposer
         return 'Bankmutatie';
       }
 
+      if($value === 'KAS')
+      {
+        return 'Kasboeking';
+      }
+
       if($value === 'INK')
       {
         return 'Inkoopfactuur';
