@@ -95,23 +95,19 @@ class ReportComposer
               $extracted_browse_data_values_row[] = $cell->getValue();
             }
           }
-          
-          //remove status strin from text
-          if($extracted_browse_data_values_row[0] != 'final' && $extracted_browse_data_values_row[0] != 'matched')
+
+          if($this->report->type == 'debtors' || $this->report->type == 'creditors')
           {
-              if($this->report->type == 'debtors' || $this->report->type == 'creditors')
-              {
-                if((int)$extracted_browse_data_values_row[count($extracted_browse_data_values_row) - 1] !== 0)
-                {
-                  array_shift($extracted_browse_data_values_row);
-                  $extracted_browse_data_values_rows[] = $extracted_browse_data_values_row;
-                }
-              }
-              else {
-                array_shift($extracted_browse_data_values_row);
-                $extracted_browse_data_values_rows[] = $extracted_browse_data_values_row;
-              }          
+            if((int)$extracted_browse_data_values_row[count($extracted_browse_data_values_row) - 1] !== 0)
+            {
+              array_shift($extracted_browse_data_values_row);
+              $extracted_browse_data_values_rows[] = $extracted_browse_data_values_row;
+            }
           }
+          else {
+            array_shift($extracted_browse_data_values_row);
+            $extracted_browse_data_values_rows[] = $extracted_browse_data_values_row;
+          }  
         }
         
         return $extracted_browse_data_values_rows;
@@ -234,7 +230,7 @@ class ReportComposer
 
       if($value === 'KAS')
       {
-        return 'Kasboeking';
+        return 'Kasboek';
       }
 
       if($value === 'INK')
