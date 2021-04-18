@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\ModelStatus\HasStatuses;
-use PhpTwinfield\BrowseColumn;
-use PhpTwinfield\Enums\BrowseColumnOperator;
 
 
 class Report extends Model implements HasMedia
@@ -45,139 +43,25 @@ class Report extends Model implements HasMedia
     }
 
     public function configuration()
-    {   
-        switch ($this->type) {
-            case 'call_posts':
-                return $this->call_posts_configuration();
-                break;
-            case 'debtors':
-                return $this->debtors_configuration();
-                break;
-            case 'creditors':
-                return $this->creditors_configuration();
-                break;
-        }
+    {    
+        /*
+            Need to implement an additional check in the future to determine the data
+            provider (Twinfield, Exact etc.) For now we only support Twinfield so it's fine.
+        */
+        return match($this->type) {
+            'unspecified_posts' => config('twinfield-reports.unspecified_posts'),
+            'debtors' => config('twinfield-reports.debtors'),
+            'creditors' => config('twinfield-reports.creditors'),
+            default => throw new \Exception('report_type_is_unsupported'),
+        };
     }
 
-    public function visible_columns()
+    public function visible_columns_pdf_export()
     {
-        $columns = [];
+        $configuration = $this->configuration();
 
-        foreach($this->configuration['columns'] as $column)
-        {
-            if(!array_key_exists('hide', $column))
-            {
-                $columns[] = $column;
-            }
-        }
-
-        return $columns;
-    }
-
-    private function call_posts_configuration()
-    {
-        $configuration = [
-                            'columns' => [
-                                ['label'=>'Status', 'twinfield_column' => 'fin.trs.head.status', 'hide' => true],
-                                ['label'=>'Dagboek', 'twinfield_column' => 'fin.trs.head.code', 'align'=>'left'],
-                                ['label'=>'Boekdatum', 'twinfield_column' => 'fin.trs.head.date', 'align'=>'left'],
-                                ['label'=>'Omschrijving', 'twinfield_column' => 'fin.trs.line.description', 'align'=>'left'],
-                                ['label'=>'Bedrag', 'twinfield_column' => 'fin.trs.line.valuesigned', 'align'=>'right'],
-                                ['label'=>'Ontvangst/Betaling', 'twinfield_column' => '', 'align'=>'left'],
-                                ['label'=>'Factuurnummer', 'twinfield_column' => 'fin.trs.line.invnumber', 'align'=>'left'],        
-                            ],
-                            'browse_definition' => '030_3',
-                            'view' => 'pdf.call_posts',
-                        ];
-        
-        return $configuration;
-    }
-
-    private function debtors_configuration()
-    {
-        $configuration = [
-                            'columns' => [
-                                ['label'=>'Status', 'twinfield_column' => 'fin.trs.line.matchstatus', 'hide' => true],
-                                ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2', 'hide' => true],
-                                ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2name', 'hide' => true],
-                                ['label'=>'Dagboek', 'twinfield_column' => 'fin.trs.head.code', 'align'=>'left'],
-                                ['label'=>'Datum', 'twinfield_column' => 'fin.trs.head.date', 'align'=>'left'],
-                                ['label'=>'Factuurnummer', 'twinfield_column' => 'fin.trs.line.invnumber', 'align'=>'left'],
-                                ['label'=>'Bedrag', 'twinfield_column' => 'fin.trs.line.valuesigned', 'align'=>'right'],
-                                ['label'=>'Openstaand', 'twinfield_column' => 'fin.trs.line.openbasevaluesigned', 'align'=>'right'],
-                            ],
-                            'group_by_column' => 0,
-                            'sum_column' => 5,
-                            'browse_definition' => '100',
-                            'view' => 'pdf.debtors',
-                        ];
-        
-        return $configuration;
-    }
-
-    private function creditors_configuration()
-    {
-        $configuration = [
-                            'columns' => [
-                                ['label'=>'Status', 'twinfield_column' => 'fin.trs.line.matchstatus', 'hide' => true],
-                                ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2', 'hide' => true],
-                                ['label'=>'Relatie', 'twinfield_column' => 'fin.trs.line.dim2name', 'hide' => true],
-                                ['label'=>'Dagboek', 'twinfield_column' => 'fin.trs.head.code', 'align'=>'left'],
-                                ['label'=>'Datum', 'twinfield_column' => 'fin.trs.head.date', 'align'=>'left'],
-                                ['label'=>'Factuurnummer', 'twinfield_column' => 'fin.trs.line.invnumber', 'align'=>'left'],
-                                ['label'=>'Bedrag', 'twinfield_column' => 'fin.trs.line.valuesigned', 'align'=>'right'],
-                                ['label'=>'Openstaand', 'twinfield_column' => 'fin.trs.line.openbasevaluesigned', 'align'=>'right'],
-                            ],
-                            'group_by_column' => 0,
-                            'sum_column' => 5,
-                            'browse_definition' => '200',
-                            'view' => 'pdf.creditors',
-                        ];
-        
-        return $configuration;
-    }
-
-    public function twinfield_columns()
-    {   
-        $configuration_columns = $this->configuration()['columns'];
-        $twinfield_columns = [];
-
-        foreach($configuration_columns as $column)
-        {   
-            if($column['twinfield_column'] !== '')
-            {
-                if($column['label'] == 'Status')
-                {
-                    if($this->type == 'debtors' || $this->type == 'creditors')
-                    {
-                        logger($column['twinfield_column']);
-                        $twinfield_columns[] = (new BrowseColumn())
-                            ->setField($column['twinfield_column'])
-                            ->setLabel($column['label'])
-                            ->setOperator(BrowseColumnOperator::EQUAL())
-                            ->setFrom('available')
-                            ->setTo('available')
-                            ->setVisible(true);                                            
-                    }
-                    else {
-                        $twinfield_columns[] = (new BrowseColumn())
-                            ->setField($column['twinfield_column'])
-                            ->setLabel($column['label'])
-                            ->setOperator(BrowseColumnOperator::EQUAL())
-                            ->setFrom('temporary')
-                            ->setTo('temporary')
-                            ->setVisible(true);
-                    }
-                }
-                else {
-                    $twinfield_columns[] = (new BrowseColumn())
-                        ->setField($column['twinfield_column'])
-                        ->setLabel($column['label'])
-                        ->setVisible(true);
-                }
-            }
-        }
-
-        return $twinfield_columns;
+        return collect($configuration['columns'])->filter(function($column) use ($configuration){
+            return !collect($configuration['hidden_columns_in_pdf_export'])->contains($column['id']);
+        })->values();
     }
 }

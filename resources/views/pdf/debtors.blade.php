@@ -31,20 +31,30 @@
    
     <body style="width: 100%; margin:0; font-family:'Inter var';">
         <header style="margin-bottom: 24px;">
-           <img src="{{ $data->report->overview->administration->account->logo }}" class="logo" style="height: 32px;">
+           <img src="{{ $report->overview->administration->account->logo }}" class="logo" style="height: 32px;">
         </header>
         <main>
-            <h1 class="text-2xl" style="font-family:'Inter var';">{{ 'Debiteurenoverzicht ' . $data->report->overview->administration->name }}</h1>
+            <h1 class="text-2xl" style="font-family:'Inter var';">{{ 'Debiteurenoverzicht ' . $report->overview->administration->name }}</h1>
             
             <div class="mt-4 mb-4">
                 Datum: {{date('d-m-Y - H:i')}}<br>
-                Totaal openstaand:  {{$data->total}}
+
+                @php
+                    $total_amount = $data->reduce(function ($carry, $group) {
+                        return $carry + $group['total'];
+                    });
+  
+                    $formatter = new \NumberFormatter('nl_NL', \NumberFormatter::CURRENCY);
+                @endphp
+                Totaal openstaand:  {{ $formatter->formatCurrency((float)$total_amount, 'EUR')}}
             </div>
-            @php 
+            
+            @php
                 $i = 0;
-                $visible_columns = $data->report->visible_columns();
+                $visible_columns = $report->visible_columns_pdf_export();
             @endphp
-            @foreach($data->rows as $index_debtor=>$debtor)
+
+            @foreach($data as $group)
             <div style="margin-top: 14px;">
                 
                 <table cellspacing="0" cellpadding="1" width="100%" >
@@ -63,46 +73,58 @@
                     @endif
                     <tbody>
                         <tr>
-                            <td colspan="{{count($debtor['rows'][0])}}">
+                            <td colspan="{{count($visible_columns)}}">
                                 <div class="flex justify-between w-full h-full leading-none bg-gray-100">
                                     <div style="padding: 4px 8px">
-                                        <h3>{{$debtor['name']}}</h3>
+                                        <h3>{{$group['name']}}</h3>
                                     </div>
                                     <div style="padding: 4px 8px">
-                                        <h3>Totaal: {{$debtor['total']}}</h3>
+                                        <h3>Totaal: {{ $formatter->formatCurrency((float)$group['total'], 'EUR') }}</h3>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                        @foreach($debtor['rows'] as $line)
+                        @foreach($group['rows'] as $row)
                         <tr>
-                            @foreach($line as $index=>$cell)
-
                             @php
-                                $label = $visible_columns[$index]['label'];
-                                $width = '';
-                                if($label == 'Dagboek')
+                                $cells_to_show = $row->reject(function($cell) use ($data){
+                                    return collect($report->configuration()['hidden_columns_in_pdf_export'])->contains($cell['id']);
+                                });
+
+                                ray($cells_to_show);
+                            @endphp
+                            @foreach($cells_to_show as $cell)
+                          
+                            @php
+                                switch ($cell['id'])
                                 {
-                                    $width = '150px';
-                                }
-                                if($label == 'Datum')
-                                {
-                                    $width = '130px';
-                                }
-                                if($label == 'Bedrag')
-                                {
-                                    $width = '150px';
-                                }
-                                if($label == 'Openstaand')
-                                {
-                                    $width = '250px';
+                                    case 'journal':
+                                        $width = '150px';
+                                        break;
+                                     case 'date':
+                                        $width = '130px';
+                                        break;
+                                    case 'total_amount':
+                                        $width = '150px';
+                                        break;
+                                    case 'open_amount':
+                                        $width = '250px';
+                                        break;
+                                    default:
+                                        $width = '';
                                 }
                             @endphp
     
-                            <td valign="top" style="text-align: {{$visible_columns[$index]['align']}}; height: 1px; {{!empty($width) ? 'width: '.$width.';':''}}">
+                            <td valign="top" style="text-align: {{$cell['align']}}; height: 1px; {{!empty($width) ? 'width: '.$width.';':''}}">
                                 <div class="inline-block w-full h-full leading-none bg-gray-100">
                                     <div style="padding: 4px 8px">
-                                    {!! $cell === '' ? '&nbsp;' : $cell !!}
+                                        @if($cell['id'] == 'date')
+                                            {{ $cell['value']->format('m-d-Y') }}
+                                        @elseif(collect(['total_amount', 'open_amount'])->contains($cell['id']))
+                                            {{ $formatter->formatCurrency((float)$cell['value'], 'EUR') }}
+                                        @else
+                                            {!! $cell['value'] === '' ? '&nbsp;' : $cell['value'] !!}
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -115,11 +137,12 @@
                    
                 </div> --}}
             </div>
-            @php $i++; @endphp
-            @endforeach
+            @php($i++)
+        @endforeach
+
         </main>
         <footer style="text-align:right; margin-top:24px;">
-            Voor vragen kunt u contact opnemen met {{$data->report->overview->author->first_name}} {{$data->report->overview->author->last_name}} - <a class="font-medium" style="font-style:bold;" href="mailto:{{$data->report->overview->author->email}}">{{$data->report->overview->author->email}}</a> 
+            Voor vragen kunt u contact opnemen met {{$report->overview->author->first_name}} {{$report->overview->author->last_name}} - <a class="font-medium" style="font-style:bold;" href="mailto:{{$report->overview->author->email}}">{{$report->overview->author->email}}</a> 
         </footer>
     </body>
 </html>

@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
-  use Illuminate\Support\Facades\Request as FacadeRequest;
+use Illuminate\Support\Facades\Request as FacadeRequest;
 use Inertia\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;

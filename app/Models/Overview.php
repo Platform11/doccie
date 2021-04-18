@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\ModelStatus\HasStatuses;
 use App\Notifications\SendOverviewNotification;
 use Spatie\ModelStatus\Status;
-use App\Helpers\Reports\Twinfield\ReportComposer as TwinfieldReportComposer;
+use App\Services\TwinfieldReportComposer;
 use App\Events\Overview\Composing\Started as OverviewComposingStarted;
 use App\Events\Overview\Composing\Finished as OverviewComposingFinished;
 use App\Events\Report\Composing\Started as ReportComposingStarted;
@@ -94,7 +94,7 @@ class Overview extends Model
             /*
                 When supporting other accountancy software create a separate report composer
                 and check here if the report will based on a Twinfield administration
-                or another accountancy software administration, like Exact online.
+                or another accountancy software administration, like Exact Online.
             */
             TwinfieldReportComposer::compose($report);
 
@@ -118,7 +118,7 @@ class Overview extends Model
         if(count($this->reports) > 0)
         {
             switch ($this->reports[0]->type) {
-                case 'call_posts':
+                case 'unspecified_posts':
                     $report_name = 'Vraagpostenoverzicht';
                     break;
                 case 'debtors':

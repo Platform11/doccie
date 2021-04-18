@@ -53,8 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'domain' => env('APP_DOMAIN', 'doccie'),
-    'tld' => env('APP_TLD', '.test'),
+    'sockets_domain' => env('SOCKETS_DOMAIN', null),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -175,6 +174,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\NovaServiceProvider::class,
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,

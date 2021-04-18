@@ -62,7 +62,7 @@ class AdministrationController extends Controller
 
     public function sendOverview(Administration $administration)
     {   
-        $lock = Cache::lock($administration->account->id.'sendOverview'.$administration->id, 5);
+        $lock = Cache::lock($administration->account->id.'sendOverview'.$administration->id, 60);
 
         if ($lock->get()) {
 
@@ -85,11 +85,9 @@ class AdministrationController extends Controller
                 $report->setStatus('preparing', 'Rapport voorbereiden::Rapport wordt voorbereid om te worden opgesteld.');
             }
 
-            ProcessOverview::dispatch($overview);
+            ProcessOverview::dispatch($overview, $lock->owner());
 
             $overview->setStatus('preparing', 'Verzoek ingediend::Verzoek om rapport te genereren ingediend en zal automatisch in de wachtrij worden gezet.');
-
-            $lock->release();
 
             return $administration->load(['last_status','relation_manager']);
         }

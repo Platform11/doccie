@@ -11,6 +11,7 @@ use App\Models\Overview;
 use App\Events\Overview\Composing\Queued as OverviewComposingQueued;
 use App\Events\Overview\Composing\Failed as OverviewComposingFailed;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Support\Facades\Cache;
 
 class ProcessOverview implements ShouldQueue, ShouldBeUnique
 {
@@ -20,6 +21,8 @@ class ProcessOverview implements ShouldQueue, ShouldBeUnique
      * @var \App\Models\Overview
      */
     protected $overview;
+
+    protected $owner;
 
     public function uniqueId()
     {
@@ -31,9 +34,10 @@ class ProcessOverview implements ShouldQueue, ShouldBeUnique
      *
      * @return void
      */
-    public function __construct(Overview $overview)
+    public function __construct(Overview $overview, $owner)
     {
         $this->overview = $overview;
+        $this->owner = $owner;
         OverviewComposingQueued::dispatch($this->overview);
     }
 
@@ -45,6 +49,7 @@ class ProcessOverview implements ShouldQueue, ShouldBeUnique
     public function handle()
     {   
         $this->overview->compose()->notifyStakeHolders();
+        $this->release_lock();
     }
 
     public function failed($e)
@@ -52,6 +57,11 @@ class ProcessOverview implements ShouldQueue, ShouldBeUnique
         if($e->getMessage() == 'office_does_not_exist')
         {
           $reason = 'Administratie niet gevonden::Administratie kan niet gevonden worden in Twinfield. Controleer of de administratie in Twinfield bestaat en dat je de juiste rechten hebt.';
+        }
+
+        if($e->getMessage() == 'Service unavailable')
+        {
+          $reason = 'Er is iets misgegaan::Het lijkt er op dat Twinfield een storing heeft. Probeer het nogmaals of anders op een later moment.';
         }
 
         if($e->getMessage() == 'account_office_code_does_not_exist')
@@ -83,5 +93,11 @@ class ProcessOverview implements ShouldQueue, ShouldBeUnique
           $this->overview, 
           !empty($reason) ? $reason : 'Er is iets misgegaan::'.$e->getMessage(),
         );
+
+        $this->release_lock();
+    }
+
+    public function release_lock() {
+        Cache::restoreLock($this->overview->administration->account->id.'sendOverview'.$this->overview->administration->id, $this->owner)->release();
     }
 }

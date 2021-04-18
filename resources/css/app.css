@@ -35,10 +35,6 @@
     }
 
     h1 {
-        @apply text-2xl;
-
-        @screen sm {
-            @apply text-4xl;
-        }
+        @apply text-2xl sm:text-4xl;
     }
 }

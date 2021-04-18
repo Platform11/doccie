@@ -25,8 +25,8 @@ return [
         [
             'id' => 1155572,
             'name' => env('APP_NAME'),
-            'key' => 'a8aa3f4f89cd6815bxza',
-            'secret' => 'd6d208acf5549b8736bc',
+            'key' => env('PUSHER_APP_KEY'),
+            'secret' => env('PUSHER_APP_SECRET'),
             'capacity' => null,
             'enable_client_messages' => false,
             'enable_statistics' => true,

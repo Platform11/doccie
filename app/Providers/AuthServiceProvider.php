@@ -36,6 +36,7 @@ class AuthServiceProvider extends ServiceProvider
             }
             
             return in_array($user->email, [
+                'test@test.com',
                 'nick@platform11.nl',
                 'esther@oneaccountants.nl'
             ]);       

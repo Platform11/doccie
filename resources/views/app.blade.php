@@ -59,15 +59,12 @@
             meta.name = "apple-mobile-web-app-status-bar-style";
             meta.content = "black-translucent";
             document.getElementsByTagName('head')[0].appendChild(meta);
-            console.log('test');
         }
 
     </script>
         <script>
             window.PUSHER_APP_KEY = '{{ config('broadcasting.connections.pusher.key') }}';
-            window.APP_DEBUG = {{ config('app.debug') ? 'true' : 'false' }};
-            window.APP_DOMAIN = '{{ config('app.domain') }}';
-            window.APP_TLD = '{{ config('app.tld') }}';
+            window.SOCKETS_DOMAIN = '{{ config('app.sockets_domain') }}';
         </script>
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
