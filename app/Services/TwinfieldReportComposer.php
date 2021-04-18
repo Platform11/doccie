@@ -24,7 +24,7 @@ class TwinfieldReportComposer
         return (new static)->start($report);
     }
 
-    private function start($report)
+    private function start(Report $report)
     {   
       $this->report = $report;
 
