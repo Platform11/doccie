@@ -83,28 +83,6 @@ class Overview extends Model
         ])->with('lastStatus');
     }
 
-    public function compose()
-    {   
-        OverviewComposingStarted::dispatch($this);
-
-        foreach($this->reports as $report)
-        {   
-            ReportComposingStarted::dispatch($report);
-
-            /*
-                When supporting other accountancy software create a separate report composer
-                and check here if the report will based on a Twinfield administration
-                or another accountancy software administration, like Exact Online.
-            */
-            TwinfieldReportComposer::compose($report);
-
-            ReportComposingFinished::dispatch($report);
-        }
-
-        OverviewComposingFinished::dispatch($this);
-        return $this;
-    }
-
     public function notifyStakeHolders()
     {   
         $this->author->notify(new SendOverviewNotification($this));

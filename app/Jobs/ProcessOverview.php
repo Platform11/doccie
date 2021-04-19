@@ -12,6 +12,11 @@ use App\Events\Overview\Composing\Queued as OverviewComposingQueued;
 use App\Events\Overview\Composing\Failed as OverviewComposingFailed;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Support\Facades\Cache;
+use App\Services\TwinfieldReportComposer;
+use App\Events\Overview\Composing\Started as OverviewComposingStarted;
+use App\Events\Overview\Composing\Finished as OverviewComposingFinished;
+use App\Events\Report\Composing\Started as ReportComposingStarted;
+use App\Events\Report\Composing\Finished as ReportComposingFinished;
 
 class ProcessOverview implements ShouldQueue, ShouldBeUnique
 {
@@ -48,7 +53,26 @@ class ProcessOverview implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {   
-        $this->overview->compose()->notifyStakeHolders();
+        OverviewComposingStarted::dispatch($this->overview);
+
+        foreach($this->overview->reports as $report)
+        {   
+            ReportComposingStarted::dispatch($report);
+
+            /*
+                When supporting other accountancy software create a separate report composer
+                and check here if the report will based on a Twinfield administration
+                or another accountancy software administration, like Exact Online.
+            */
+            TwinfieldReportComposer::compose($report);
+
+            ReportComposingFinished::dispatch($report);
+        }
+
+        OverviewComposingFinished::dispatch($this->overview);
+
+        $this->overview->notifyStakeHolders();
+
         $this->release_lock();
     }
 
